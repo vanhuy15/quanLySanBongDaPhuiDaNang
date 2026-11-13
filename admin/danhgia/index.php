@@ -145,9 +145,13 @@ $san_list = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
                         </td>
 
                         <td style="text-align: center;">
-                            <a href="detail.php?id=<?php echo $san['san_id']; ?>" class="btn-primary-modern" style="padding: 6px 14px; font-size: 0.82rem;">
-                                Xem nhận xét
-                            </a>
+                            <?php if ((int)$san['total_reviews'] > 0): ?>
+                                <a href="detail.php?id=<?php echo $san['san_id']; ?>" class="btn-primary-modern" style="padding: 6px 14px; font-size: 0.82rem;">
+                                    Xem nhận xét
+                                </a>
+                            <?php else: ?>
+                                <span style="color: var(--text-subtle); font-style: italic; font-size: 0.85rem;">Chưa có nhận xét</span>
+                            <?php endif; ?>
                         </td>
                     </tr>
                     <?php endforeach; ?>

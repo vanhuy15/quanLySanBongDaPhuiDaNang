@@ -40,7 +40,7 @@ $conn = \Config\Database::getConnection();
 require_once dirname(__DIR__) . '/includes/csrf.php';
 
 // Global CSRF Validation for Admin POST requests
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
     if (!verify_csrf_token($token)) {
         http_response_code(403);

@@ -1,0 +1,48 @@
+name: CI Test Suite
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: quanlysanbong
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, mysqli, pdo, curl, openssl
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install NPM Dependencies
+      run: npm install
+
+    - name: Copy .env file
+      run: cp .env.example .env
+
+    - name: Run Database Migrations
+      run: node scripts/run-php.js database/migrate.php
+
+    - name: Run Unit Tests (PHPUnit)
+      run: npm run test:unit

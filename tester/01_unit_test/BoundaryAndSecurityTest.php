@@ -128,3 +128,4 @@ class BoundaryAndSecurityTest extends TestCase {
         $this->assertTrue($user['khoa_tai_khoan'] === 0 && $user['diem_uy_tin'] >= 40);
     }
 }
+

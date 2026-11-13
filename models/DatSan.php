@@ -125,6 +125,29 @@ class DatSan {
             $new_dat_san_id = $conn->insert_id;
             $stmt_insert->close();
 
+            // Ghi nhận slot khóa cứng cấp CSDL (Hard Database Constraints)
+            $sub_pitches = array_filter(array_map('trim', explode(',', $san_con_khoa ?: $ten_san_con)));
+            $slot_stmt = $conn->prepare("
+                INSERT INTO dat_san_slots (dat_san_id, khung_gio_id, ngay_dat, ten_san_con, trang_thai) 
+                VALUES (?, ?, ?, ?, 'active')
+            ");
+            foreach ($sub_pitches as $sp) {
+                $slot_stmt->bind_param("iiss", $new_dat_san_id, $khung_gio_id, $ngay_dat, $sp);
+                if (!$slot_stmt->execute()) {
+                    // Lỗi trùng lặp UNIQUE KEY active_key (MySQL Error 1062)
+                    if ($conn->errno === 1062) {
+                        $slot_stmt->close();
+                        $conn->rollback();
+                        return [
+                            'success' => false,
+                            'message' => "Rất tiếc! Sân bạn vừa chọn (hoặc sân con thành phần) vừa có người khác đặt. Vui lòng chọn sân hoặc khung giờ khác."
+                        ];
+                    }
+                    throw new \Exception("Lỗi ghi nhận slot CSDL: " . $conn->error);
+                }
+            }
+            $slot_stmt->close();
+
             // Commit giao dịch thành công
             $conn->commit();
 
@@ -166,9 +189,15 @@ class DatSan {
 
         } catch (\Exception $e) {
             $conn->rollback();
+            \Core\Logger::error("Lỗi đặt sân bookWithLock: " . $e->getMessage(), [
+                'user_id' => $nguoi_dung_id,
+                'khung_gio_id' => $khung_gio_id,
+                'ngay_dat' => $ngay_dat,
+                'trace' => $e->getTraceAsString()
+            ]);
             return [
                 'success' => false,
-                'message' => 'Có lỗi xảy ra trong quá trình giữ sân: ' . $e->getMessage()
+                'message' => 'Rất tiếc! Hệ thống đang bận hoặc có lỗi xảy ra trong quá trình xử lý đơn đặt sân. Vui lòng thử lại sau.'
             ];
         }
     }
@@ -240,6 +269,17 @@ class DatSan {
         $stmt->bind_param("si", $trang_thai, $dat_san_id);
         $res = $stmt->execute();
         $stmt->close();
+
+        // Tự động giải phóng slot cấp CSDL nếu đơn chuyển sang trạng thái Hủy
+        if (in_array($trang_thai, ['Đã hủy', 'Hủy'])) {
+            $rel_stmt = $conn->prepare("UPDATE dat_san_slots SET trang_thai = 'released' WHERE dat_san_id = ?");
+            if ($rel_stmt) {
+                $rel_stmt->bind_param("i", $dat_san_id);
+                $rel_stmt->execute();
+                $rel_stmt->close();
+            }
+        }
+
         return $res;
     }
 
@@ -248,6 +288,14 @@ class DatSan {
      */
     public static function deleteHard($dat_san_id) {
         $conn = Database::getConnection();
+        // Xóa bản ghi slot CSDL
+        $stmt0 = $conn->prepare("DELETE FROM dat_san_slots WHERE dat_san_id = ?");
+        if ($stmt0) {
+            $stmt0->bind_param("i", $dat_san_id);
+            $stmt0->execute();
+            $stmt0->close();
+        }
+
         $stmt1 = $conn->prepare("DELETE FROM thanh_toan WHERE dat_san_id = ?");
         $stmt1->bind_param("i", $dat_san_id);
         $stmt1->execute();

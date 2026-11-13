@@ -27,7 +27,8 @@ class Database {
      * Dùng method này thay cho việc copy-paste query ở nhiều controller.
      */
     public static function cleanupExpiredBookings(): void {
-        self::getConnection()->query("
+        $conn = self::getConnection();
+        $conn->query("
             UPDATE dat_san ds
             LEFT JOIN thanh_toan tt ON ds.dat_san_id = tt.dat_san_id
             SET ds.trang_thai = 'Đã hủy'
@@ -36,6 +37,15 @@ class Database {
                   (ds.trang_thai = 'Chờ thanh toán' AND TIMESTAMPDIFF(MINUTE, ds.ngay_tao, NOW()) >= 10)
                   OR (ds.trang_thai = 'Chờ xác nhận' AND tt.thanh_toan_id IS NULL AND TIMESTAMPDIFF(MINUTE, ds.ngay_tao, NOW()) >= 10)
               )
+        ");
+
+        // Đồng bộ giải phóng các slot khóa ở cấp CSDL cho các đơn đã hủy
+        $conn->query("
+            UPDATE dat_san_slots dss
+            JOIN dat_san ds ON dss.dat_san_id = ds.dat_san_id
+            SET dss.trang_thai = 'released'
+            WHERE ds.trang_thai IN ('Đã hủy', 'Hủy')
+              AND dss.trang_thai = 'active'
         ");
     }
 }

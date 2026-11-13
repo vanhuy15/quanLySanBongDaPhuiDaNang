@@ -73,12 +73,26 @@ function is_admin() {
     return isset($_SESSION['vai_tro']) && $_SESSION['vai_tro'] === 'admin';
 }
 
+function get_app_base_url(): string {
+    $script = $_SERVER['SCRIPT_NAME'] ?? '';
+    if (preg_match('#^(.*?quanlysanbong)#i', $script, $m)) {
+        return $m[1];
+    }
+    $dir = rtrim(dirname($script), '/\\');
+    if (strpos($dir, '/admin') !== false) {
+        $dir = substr($dir, 0, strpos($dir, '/admin'));
+    }
+    return $dir ?: '';
+}
+
 function require_login() {
     if (!is_logged_in()) {
+        $base = get_app_base_url();
+        $target = $base . '/index.php?controller=Auth&action=login';
         if (!headers_sent()) {
-            header("Location: /quanlysanbong/index.php?controller=Auth&action=login");
+            header("Location: " . $target);
         } else {
-            echo "<script>window.location.href='/quanlysanbong/index.php?controller=Auth&action=login';</script>";
+            echo "<script>window.location.href='" . htmlspecialchars($target, ENT_QUOTES) . "';</script>";
         }
         exit();
     }
@@ -89,10 +103,12 @@ function require_login() {
  */
 function require_admin() {
     if (!is_admin()) {
+        $base = get_app_base_url();
+        $target = $base . '/index.php';
         if (!headers_sent()) {
-            header("Location: /quanlysanbong/index.php");
+            header("Location: " . $target);
         } else {
-            echo "<script>window.location.href='/quanlysanbong/index.php';</script>";
+            echo "<script>window.location.href='" . htmlspecialchars($target, ENT_QUOTES) . "';</script>";
         }
         exit();
     }

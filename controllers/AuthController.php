@@ -9,12 +9,33 @@ class AuthController extends Controller {
     
     public function login() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $isApi = (strpos($_SERVER['HTTP_ACCEPT'] ?? '', 'application/json') !== false 
+                     || ($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') === 'XMLHttpRequest'
+                     || (isset($_GET['format']) && $_GET['format'] === 'json'));
+
+            // Rate Limiting: Chặn brute-force sau 5 lần thử sai trong 15 phút
+            if (\Core\RateLimiter::isLimited('login', 5, 900)) {
+                $wait = \Core\RateLimiter::remainingSeconds('login');
+                $error = "Bạn đã thử đăng nhập sai quá nhiều lần. Vui lòng chờ {$wait} giây trước khi thử lại!";
+                if ($isApi) {
+                    $this->jsonResponse(['success' => false, 'message' => $error], 429);
+                    return;
+                }
+                $this->render('auth/login', ['error' => $error]);
+                return;
+            }
+
             $username = trim($_POST['username'] ?? $_POST['ten_dang_nhap'] ?? '');
             $password = $_POST['password'] ?? $_POST['mat_khau'] ?? '';
             
             // Validate username format (Chống SQL Injection & Input malformed)
             if (empty($username) || !preg_match('/^[a-zA-Z0-9_.]{3,30}$/', $username)) {
-                $this->render('auth/login', ['error' => 'Tên đăng nhập không hợp lệ hoặc không tồn tại!']);
+                $error = 'Tên đăng nhập không hợp lệ hoặc không tồn tại!';
+                if ($isApi) {
+                    $this->jsonResponse(['success' => false, 'message' => $error], 400);
+                    return;
+                }
+                $this->render('auth/login', ['error' => $error]);
                 return;
             }
 
@@ -32,18 +53,47 @@ class AuthController extends Controller {
                     $_SESSION['ho_ten'] = $user['ho_ten'];
                     $_SESSION['avatar'] = !empty($user['avatar']) ? $user['avatar'] : 'images/avatar/default_avatar.svg';
 
+                    \Core\RateLimiter::clear('login');
+                    \Core\Logger::info("Đăng nhập thành công: {$user['ten_dang_nhap']} (Vai trò: {$user['vai_tro']})");
+
+                    // Hỗ trợ trả JSON Token cho Postman / Mobile API Clients
+                    if ($isApi) {
+                        $this->jsonResponse([
+                            'success' => true,
+                            'message' => 'Đăng nhập thành công',
+                            'token' => session_id(),
+                            'csrf_token' => $_SESSION['csrf_token'] ?? '',
+                            'user' => [
+                                'id' => $user['nguoi_dung_id'],
+                                'username' => $user['ten_dang_nhap'],
+                                'role' => $user['vai_tro'],
+                                'fullname' => $user['ho_ten']
+                            ]
+                        ]);
+                        return;
+                    }
+
                     if ($user['vai_tro'] === 'admin') {
                         $this->redirect('admin/index.php');
                     } else {
                         $this->redirect('index.php');
                     }
                 } else {
+                    \Core\RateLimiter::hit('login', 900);
+                    \Core\Logger::warning("Đăng nhập thất bại: Sai mật khẩu cho user {$username}");
                     $error = "Mật khẩu không chính xác!";
                 }
             } else {
+                \Core\RateLimiter::hit('login', 900);
+                \Core\Logger::warning("Đăng nhập thất bại: Tên đăng nhập không tồn tại {$username}");
                 $error = "Tên đăng nhập không tồn tại!";
             }
             
+            if ($isApi) {
+                $this->jsonResponse(['success' => false, 'message' => $error], 401);
+                return;
+            }
+
             $this->render('auth/login', ['error' => $error]);
         } else {
             $success = $_SESSION['flash_success'] ?? null;
@@ -142,12 +192,22 @@ class AuthController extends Controller {
 
     public function forgotPassword() {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            // Rate Limiting: Chống spam email quên mật khẩu (Tối đa 3 lần / 15 phút)
+            if (\Core\RateLimiter::isLimited('forgot_password', 3, 900)) {
+                $wait = \Core\RateLimiter::remainingSeconds('forgot_password');
+                $this->render('auth/forgot', [
+                    'error' => "Bạn đã yêu cầu đặt lại mật khẩu quá nhiều lần. Vui lòng chờ {$wait} giây trước khi gửi tiếp."
+                ]);
+                return;
+            }
+
             $email = trim($_POST['email'] ?? '');
             if (empty($email)) {
                 $this->render('auth/forgot', ['error' => 'Vui lòng nhập địa chỉ email!']);
                 return;
             }
 
+            \Core\RateLimiter::hit('forgot_password', 900);
             $conn = Database::getConnection();
 
             // Luôn hiện thông báo thành công để tránh email enumeration attack
@@ -164,12 +224,6 @@ class AuthController extends Controller {
                 $token    = bin2hex(random_bytes(32));
                 $het_han  = date('Y-m-d H:i:s', time() + 3600); // Hết hạn sau 1 giờ
 
-                // Đảm bảo bảng password_resets có cột het_han
-                $col_check = $conn->query("SHOW COLUMNS FROM password_resets LIKE 'het_han'");
-                if ($col_check && $col_check->num_rows === 0) {
-                    $conn->query("ALTER TABLE password_resets ADD COLUMN het_han DATETIME NULL AFTER token");
-                }
-
                 // Xóa token cũ của email này (nếu có)
                 $del_stmt = $conn->prepare("DELETE FROM password_resets WHERE email = ?");
                 $del_stmt->bind_param("s", $email);
@@ -182,6 +236,7 @@ class AuthController extends Controller {
 
                 if ($ins_stmt->execute()) {
                     $ins_stmt->close();
+                    \Core\Logger::info("Yêu cầu reset mật khẩu cho email: {$email}");
 
                     // Tạo link reset
                     $protocol   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';

@@ -6,13 +6,16 @@
   "scripts": {
     "start": "powershell -Command \"Start-Process 'D:\\XAMPP\\apache\\bin\\httpd.exe' -WindowStyle Hidden; Start-Process 'http://localhost/quanlysanbong/'\"",
     "stop": "powershell -Command \"Stop-Process -Name httpd -Force -ErrorAction SilentlyContinue\"",
-    "test:unit": "\"D:\\XAMPP\\php\\php.exe\" tester/01_unit_test/phpunit.phar --do-not-cache-result tester/01_unit_test",
+    "test:unit": "node scripts/run-php.js tester/01_unit_test/phpunit.phar --do-not-cache-result tester/01_unit_test",
     "test:api": "npx --yes newman run tester/02_api_test/QuanLySanBong_API.postman_collection.json -e tester/02_api_test/QuanLySanBong.postman_environment.json",
     "test:e2e": "npx playwright test",
     "test:e2e:headed": "npx playwright test --headed",
     "test:report": "npx playwright show-report tester/03_e2e_ui_test/playwright-report",
-    "test:security": "\"D:\\XAMPP\\php\\php.exe\" tester/05_security_test/security_audit_runner.php",
-    "test:all": "npm run test:unit && npm run test:api && npm run test:security && npm run test:e2e"
+    "test:security": "node scripts/run-php.js tester/05_security_test/security_audit_runner.php",
+    "test:all": "npm run test:unit && npm run test:api && npm run test:security && npm run test:e2e",
+    "db:migrate": "node scripts/run-php.js database/migrate.php",
+    "db:seed": "node scripts/run-php.js database/seed.php",
+    "db:backup": "node scripts/run-php.js database/backup.php"
   },
   "keywords": [
     "php",

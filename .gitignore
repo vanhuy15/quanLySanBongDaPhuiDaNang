@@ -43,6 +43,9 @@ desktop.ini
 # 🌐 PHP / SERVER
 # =========================
 *.log
+logs/
+storage/
+database/backups/
 error_log
 php_errors.log
 

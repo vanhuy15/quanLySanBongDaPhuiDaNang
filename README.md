@@ -51,7 +51,7 @@ Dự án **Hệ Thống Quản Lý Sân Bóng Đá Phủi Đà Nẵng** ra đờ
 4. 🛡️ **Hệ thống Điểm Uy Tín Khách Hàng (Customer Credit Score System):**  
    Tự động tính điểm uy tín dựa trên hành vi: cộng điểm khi hoàn thành trận/đánh giá (+2đ), trừ điểm khi hủy sát giờ (-5đ đến -15đ), chế tài nặng khi bùng sân (-25đ). Hệ thống tự động khóa phương thức Tiền mặt nếu điểm $< 60$đ và khóa quyền đặt sân nếu điểm $< 40$đ.
 5. 💳 **Thanh toán Tự Động VietQR Chuẩn Napas 247:**  
-   Sinh mã QR thanh toán động theo chuẩn ngân hàng (MB Bank, STK `1111000050174`), tự động điền sẵn số tiền và nội dung chuyển khoản `DATSAN <id>` hỗ trợ nút sao chép thông minh.
+   Sinh mã QR thanh toán động theo chuẩn Napas 247 ngân hàng đối tác, tự động điền sẵn số tiền và nội dung chuyển khoản `DATSAN <id>` hỗ trợ nút sao chép thông minh (Cấu hình STK và ngân hàng linh hoạt qua biến môi trường `VIETQR_ACCOUNT_NO` và `VIETQR_BANK_ID` trong `.env`).
 6. 🧩 **Kiến trúc Modular MVC Thuần:**  
    Toàn bộ mã nguồn được tách biệt nghiêm ngặt: 0% inline CSS/JS trong View, giao diện Admin và Client được tổ chức thành các module stylesheet (`admin/css/`, `assets/css/modules/`) và file JavaScript chuyên biệt.
 
@@ -172,17 +172,18 @@ quanlysanbong/
    npx playwright install chromium
    ```
 
-4. **Khởi chạy ứng dụng:**
+4. **Khởi chạy ứng dụng & Dữ liệu mẫu:**
    * Mở XAMPP và Start **Apache** + **MySQL**.
+   * Chạy lệnh nạp schema & migration: `npm run db:migrate`
+   * Nạp tài khoản mẫu kiểm thử: `npm run db:seed`
    * Truy cập ứng dụng trên trình duyệt: `http://localhost/quanlysanbong/`
-   * Tài khoản Quản trị mặc định: `admin15` / Mật khẩu: `123456`
-   * Tài khoản Khách hàng thử nghiệm: `testuser` / Mật khẩu: `123456`
+   * Tài khoản Quản trị mẫu: `admin15` (Mật khẩu cấu hình bảo mật qua `.env` / `SEED_ADMIN_PASS`)
+   * Tài khoản Khách hàng thử nghiệm: `testuser` (Mật khẩu cấu hình bảo mật qua `.env` / `SEED_TEST_PASS`)
 
 ---
 
 ## 👨‍💻 TÁC GIẢ & BẢN QUYỀN
 
 * **Tác giả:** Hoàng Văn Huy ([@vanhuy15](https://github.com/vanhuy15))
-* **Email:** alexanderhuy2@gmail.com
 * **GitHub Repository:** [quanLySanBongDaPhuiDaNang](https://github.com/vanhuy15/quanLySanBongDaPhuiDaNang)
 * **Giấy phép:** [MIT License](LICENSE)

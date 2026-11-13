@@ -23,6 +23,9 @@ if ($action == 'xacnhan' || $action == 'thutien_mat') {
 }
 
 if ($dat_san_id > 0 && !empty($trang_thai_moi)) {
+    if (class_exists('\\Models\\AuditLog')) {
+        \Models\AuditLog::log($_SESSION['nguoi_dung_id'] ?? null, 'ADMIN_UPDATE_BOOKING', 'dat_san', $dat_san_id, "Hành động: {$action} | Trạng thái mới: {$trang_thai_moi}");
+    }
     
     // Lấy thông tin đơn đặt sân và người dùng trước khi cập nhật
     $stmt_info = $conn->prepare("

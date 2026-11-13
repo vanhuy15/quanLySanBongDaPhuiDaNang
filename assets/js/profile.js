@@ -51,19 +51,21 @@ function initAvatarUpload() {
             if (menuAvatar) menuAvatar.src = newSrc;
 
             if (alertContainer) {
-              alertContainer.innerHTML = `
-                <div class="success-box" style="margin-bottom: 1.5rem;">
-                  ${data.message}
-                </div>
-              `;
+              alertContainer.replaceChildren();
+              const box = document.createElement("div");
+              box.className = "success-box";
+              box.style.marginBottom = "1.5rem";
+              box.textContent = data.message || "Cập nhật ảnh đại diện thành công!";
+              alertContainer.appendChild(box);
             }
           } else {
             if (alertContainer) {
-              alertContainer.innerHTML = `
-                <div class="error" style="margin-bottom: 1.5rem;">
-                  ${data.message}
-                </div>
-              `;
+              alertContainer.replaceChildren();
+              const box = document.createElement("div");
+              box.className = "error";
+              box.style.marginBottom = "1.5rem";
+              box.textContent = data.message || "Tải ảnh lên thất bại!";
+              alertContainer.appendChild(box);
             }
           }
         })
@@ -203,14 +205,14 @@ function renderUserRepPage(page) {
 
   var container = document.getElementById("userRepPaginationBtns");
   if (!container) return;
-  container.innerHTML = "";
+  container.replaceChildren();
 
   if (totalPages <= 1) return;
 
   // Prev Button
   var prevBtn = document.createElement("button");
   prevBtn.type = "button";
-  prevBtn.innerHTML = "&larr;";
+  prevBtn.textContent = "\u2190";
   prevBtn.disabled = userRepCurrentPage === 1;
   prevBtn.style.cssText =
     "padding: 5px 10px; border-radius: 6px; border: 1px solid #cbd5e1; background: " +
@@ -250,7 +252,7 @@ function renderUserRepPage(page) {
   // Next Button
   var nextBtn = document.createElement("button");
   nextBtn.type = "button";
-  nextBtn.innerHTML = "&rarr;";
+  nextBtn.textContent = "\u2192";
   nextBtn.disabled = userRepCurrentPage === totalPages;
   nextBtn.style.cssText =
     "padding: 5px 10px; border-radius: 6px; border: 1px solid #cbd5e1; background: " +

@@ -1,6 +1,6 @@
-# 🏟️ Hệ Thống Đặt & Quản Lý Sân Bóng Mini Trực Tuyến (Football Pitch Booking & Management System)
+# 🏟️ Hệ Thống Quản Lý Sân Bóng Đá Phủi Đà Nẵng (Football Pitch Booking & Management System)
 
-> **Giải pháp chuyển đổi số toàn diện cho chuỗi sân bóng đá mini & phủi tại Việt Nam.**  
+> **Giải pháp chuyển đổi số toàn diện cho chuỗi sân bóng đá mini & phủi tại Thành phố Đà Nẵng.**  
 > Xây dựng theo kiến trúc **Pure MVC (Mô hình MVC Thuần không phụ thuộc framework)**, tối ưu hiệu năng cao, bảo mật đa tầng và tích hợp sẵn **5 bộ công cụ kiểm thử phần mềm chuyên nghiệp** (PHPUnit, Postman, Playwright, Apache JMeter, OWASP ZAP).
 
 [![PHP](https://img.shields.io/badge/PHP-8.2+-777BB4?style=for-the-badge&logo=php&logoColor=white)](https://www.php.net/)
@@ -11,6 +11,32 @@
 [![Apache JMeter](https://img.shields.io/badge/Apache_JMeter-Concurrency_Test-D22128?style=for-the-badge&logo=apache&logoColor=white)](https://jmeter.apache.org/)
 [![OWASP ZAP](https://img.shields.io/badge/OWASP-Security_Audit-005E8A?style=for-the-badge&logo=owasp&logoColor=white)](https://www.zaproxy.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
+
+---
+
+## 🎯 BỐI CẢNH THỰC TẾ & BÀI TOÁN GIẢI QUYẾT (PROBLEM STATEMENT & OBJECTIVES)
+
+### 1. Bối cảnh thực tế tại TP. Đà Nẵng
+Thành phố Đà Nẵng là một trong những trung tâm thể thao phong trào sôi động nhất miền Trung, nơi bóng đá phủi (sân cỏ nhân tạo 5 người và 7 người) trở thành hoạt động rèn luyện quen thuộc hàng ngày của học sinh, sinh viên, cán bộ công nhân viên và các câu lạc bộ bóng đá phong trào.
+
+Tuy nhiên, quy trình vận hành và đặt sân tại phần lớn các cụm sân bóng hiện nay (khu vực Liên Chiểu, Cẩm Lệ, Hải Châu, Ngũ Hành Sơn...) vẫn dựa trên phương thức gọi điện thoại, nhắn tin Zalo hoặc ghi chép sổ sách thủ công, dẫn đến nhiều bất cập nhức nhối:
+* **Khách hàng gặp nhiều trở ngại:** Không thể biết trước khung giờ nào còn trống nếu không gọi hỏi trực tiếp chủ sân; không nắm rõ biểu giá các khung giờ vàng hoặc ngày cuối tuần; không có sơ đồ trực quan để biết vị trí sân con mình sẽ thi đấu; chuyển khoản ngân hàng thủ công dễ nhầm số tiền hoặc sai lệch nội dung đối soát.
+* **Chủ sân đối mặt với rủi ro vận hành & thất thoát doanh thu:**
+  * **Vấn nạn "Bùng sân" (No-show):** Khách đặt miệng qua điện thoại nhưng sát giờ không đến đá, khiến sân bị bỏ trống trong khung giờ vàng mà không kịp cho đội khác thuê, gây thiệt hại tài chính nặng nề.
+  * **Trùng lịch (Double-Booking):** Khi nhiều khách cùng gọi điện hoặc nhắn tin đặt một khung giờ, việc ghi chép sổ tay dễ dẫn đến nhầm lẫn, đặt trùng một sân cho 2 đội bóng, gây tranh cãi và ảnh hưởng uy tín sân.
+  * **Bài toán ghép sân 5 & sân 7 phức tạp:** Đa số các sân 7 người tại Đà Nẵng được ghép từ 2 sân 5 con cạnh nhau (ngăn bởi lưới kéo di động). Khi quản lý thủ công, nhân viên rất dễ nhầm lẫn: cho thuê sân 7 nhưng vẫn lỡ nhận cọc sân 5 con thành phần, dẫn đến xung đột không thể giải quyết khi các đội cùng ra sân.
+  * **Quản trị tài chính rời rạc:** Việc thu tiền mặt hoặc nhận chuyển khoản rải rác khiến việc tổng kết, đối soát doanh thu cuối ngày/cuối tháng tốn nhiều thời gian và tiềm ẩn nguy cơ sai lệch, thất thoát.
+
+### 2. Mục tiêu & Giải pháp của Dự Án
+Dự án **Hệ Thống Quản Lý Sân Bóng Đá Phủi Đà Nẵng** ra đời nhằm số hóa toàn diện quy trình kết nối giữa người chơi bóng và ban quản lý cụm sân:
+- 🌐 **Minh bạch hóa thông tin 24/7:** Cho phép người chơi tra cứu trực tuyến tình trạng sân trống theo ngày, theo từng khung giờ và xem bảng giá minh bạch trong tích tắc.
+- 🗺️ **Sơ đồ 2D trực quan:** Người chơi tự do lựa chọn chính xác sân con (Sân con A, Sân con B, hoặc Cụm sân 7 ghép) trên giao diện trực quan trước khi xác nhận.
+- ⚡ **Khóa giao dịch chống trùng sân tự động:** Thuật toán hàng đợi kết hợp MySQL Transaction `SELECT ... FOR UPDATE` đảm bảo không bao giờ xảy ra tình trạng 2 khách đặt trùng cùng 1 vị trí sân.
+- 🔄 **Tự động hóa khóa chéo sân ghép đa năng:** Khi có đơn đặt Sân 7, hệ thống lập tức khóa tự động 2 sân 5 tương ứng và ngược lại, giải phóng hoàn toàn sức lao động cho nhân viên quản lý.
+- ⏱️ **Cơ chế giữ chỗ 10 phút & Tự động nhả slot:** Đảm bảo tính công bằng, giữ slot cho khách hàng thao tác thanh toán trong 10 phút, nếu quá hạn hệ thống sẽ tự động giải phóng vị trí cho người khác.
+- 🛡️ **Hệ thống Điểm Uy Tín & Chế tài bùng sân:** Tự động tính điểm tín nhiệm khách hàng dựa trên lịch sử đặt/hủy. Khách có hành vi bùng sân sẽ bị trừ điểm nặng (-25đ), điểm dưới 60đ bị cấm trả tiền mặt (buộc chuyển khoản trước), và dưới 40đ bị khóa quyền đặt sân, bảo vệ 100% doanh thu cho chủ sân.
+- 💳 **Thanh toán VietQR chuẩn Napas 247:** Tự động tạo mã QR chính xác từng đồng, tự điền nội dung chuyển khoản định danh đơn đặt, loại bỏ hoàn toàn sai sót khi giao dịch.
+- 📊 **Số hóa nghiệp vụ Quản trị (Admin Portal):** Cung cấp Dashboard theo dõi KPI, biểu đồ doanh thu trực quan, quản lý khung giờ vàng linh hoạt và hỗ trợ xuất báo cáo Excel chỉ với một cú nhấp chuột.
 
 ---
 

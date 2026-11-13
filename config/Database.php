@@ -60,12 +60,12 @@ class Database {
               )
         ");
 
-        // Đồng bộ giải phóng các slot khóa ở cấp CSDL cho các đơn đã hủy
+        // Đồng bộ giải phóng các slot khóa ở cấp CSDL cho các đơn đã hủy hoặc hoàn tiền
         $conn->query("
             UPDATE dat_san_slots dss
             JOIN dat_san ds ON dss.dat_san_id = ds.dat_san_id
             SET dss.trang_thai = 'released'
-            WHERE ds.trang_thai IN ('Đã hủy', 'Hủy')
+            WHERE ds.trang_thai IN ('Đã hủy', 'Hủy', 'Chờ hoàn tiền', 'Đã hoàn tiền')
               AND dss.trang_thai = 'active'
         ");
     }

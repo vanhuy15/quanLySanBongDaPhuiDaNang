@@ -382,6 +382,14 @@ class UserController extends Controller {
             if ($stmt_cancel->execute()) {
                 $stmt_cancel->close();
 
+                // Giải phóng slot khóa CSDL để khách hàng khác có thể đặt lại sân ngay lập tức
+                $rel_stmt = $conn->prepare("UPDATE dat_san_slots SET trang_thai = 'released' WHERE dat_san_id = ?");
+                if ($rel_stmt) {
+                    $rel_stmt->bind_param("i", $dat_san_id);
+                    $rel_stmt->execute();
+                    $rel_stmt->close();
+                }
+
                 // Thông báo
                 \Models\Notification::create(
                     $nguoi_dung_id,
@@ -401,6 +409,14 @@ class UserController extends Controller {
             $stmt_cancel->bind_param("i", $dat_san_id);
             if ($stmt_cancel->execute()) {
                 $stmt_cancel->close();
+
+                // Giải phóng slot khóa CSDL để khách hàng khác có thể đặt lại sân ngay lập tức
+                $rel_stmt = $conn->prepare("UPDATE dat_san_slots SET trang_thai = 'released' WHERE dat_san_id = ?");
+                if ($rel_stmt) {
+                    $rel_stmt->bind_param("i", $dat_san_id);
+                    $rel_stmt->execute();
+                    $rel_stmt->close();
+                }
 
                 // Thông báo
                 \Models\Notification::create(

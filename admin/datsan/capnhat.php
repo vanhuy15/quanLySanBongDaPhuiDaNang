@@ -47,6 +47,16 @@ if ($dat_san_id > 0 && !empty($trang_thai_moi)) {
     $stmt->execute();
     $stmt->close();
 
+    // Tự động giải phóng slot cấp CSDL nếu đơn chuyển sang trạng thái Hủy hoặc Hoàn tiền
+    if (in_array($trang_thai_moi, ['Đã hủy', 'Hủy', 'Đã hoàn tiền'])) {
+        $rel_stmt = $conn->prepare("UPDATE dat_san_slots SET trang_thai = 'released' WHERE dat_san_id = ?");
+        if ($rel_stmt) {
+            $rel_stmt->bind_param("i", $dat_san_id);
+            $rel_stmt->execute();
+            $rel_stmt->close();
+        }
+    }
+
     // 2. Xử lý các action cụ thể
     if ($action == 'thutien_mat' || $action == 'xacnhan') {
         $stmt_tt = $conn->prepare("UPDATE thanh_toan SET trang_thai = 'da_thanh_toan' WHERE dat_san_id = ?");

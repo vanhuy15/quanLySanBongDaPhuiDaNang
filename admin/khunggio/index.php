@@ -33,7 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                 header("Location: index.php?san_id=$san_id_add&success=" . urlencode($success));
                 exit();
             } else {
-                $error = "Lỗi: " . $stmt->error;
+                \Core\Logger::error("Lỗi thêm khung giờ: " . $stmt->error);
+                $error = "Có lỗi xảy ra khi lưu khung giờ. Vui lòng kiểm tra lại.";
             }
             $stmt->close();
         }

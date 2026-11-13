@@ -44,7 +44,8 @@ if ($khung_gio_id > 0 && $_SERVER['REQUEST_METHOD'] == 'POST') {
             $kg = $stmt_refresh->get_result()->fetch_assoc();
             $stmt_refresh->close();
         } else {
-            $error = "Lỗi CSDL: " . $stmt_update->error;
+            \Core\Logger::error("Lỗi cập nhật khung giờ: " . $stmt_update->error);
+            $error = "Có lỗi xảy ra khi cập nhật khung giờ. Vui lòng kiểm tra lại.";
         }
         $stmt_update->close();
     }

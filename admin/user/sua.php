@@ -56,7 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $success = "Cập nhật thông tin khách hàng thành công!";
             if(!empty($new_password)) $success .= " Đã đổi mật khẩu mới.";
         } else {
-            $error = "Lỗi: " . $stmt->error;
+            \Core\Logger::error("Lỗi cập nhật người dùng: " . $stmt->error);
+            $error = "Có lỗi xảy ra khi cập nhật thông tin khách hàng. Vui lòng kiểm tra lại.";
         }
     }
 }

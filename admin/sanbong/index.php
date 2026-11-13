@@ -51,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && $_POST['a
                 $success = "Thêm sân bóng mới thành công!";
             }
         } else {
-            $error = "Lỗi khi thêm sân: " . $stmt_insert->error;
+            \Core\Logger::error("Lỗi khi thêm sân bóng: " . $stmt_insert->error);
+            $error = "Có lỗi xảy ra khi lưu thông tin sân bóng. Vui lòng kiểm tra lại.";
         }
         $stmt_insert->close();
     }

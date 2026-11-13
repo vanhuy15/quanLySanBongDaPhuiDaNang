@@ -270,8 +270,8 @@ class DatSan {
         $res = $stmt->execute();
         $stmt->close();
 
-        // Tự động giải phóng slot cấp CSDL nếu đơn chuyển sang trạng thái Hủy
-        if (in_array($trang_thai, ['Đã hủy', 'Hủy'])) {
+        // Tự động giải phóng slot cấp CSDL nếu đơn chuyển sang trạng thái Hủy hoặc Hoàn tiền
+        if (in_array($trang_thai, ['Đã hủy', 'Hủy', 'Chờ hoàn tiền', 'Đã hoàn tiền'])) {
             $rel_stmt = $conn->prepare("UPDATE dat_san_slots SET trang_thai = 'released' WHERE dat_san_id = ?");
             if ($rel_stmt) {
                 $rel_stmt->bind_param("i", $dat_san_id);

@@ -68,3 +68,4 @@ echo "  Dung lượng: {$sizeKb} KB\n";
 echo "=======================================================\n";
 
 Logger::info("Database backup created: {$backupFile} ({$sizeKb} KB)");
+

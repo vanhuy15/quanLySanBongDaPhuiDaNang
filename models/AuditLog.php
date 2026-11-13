@@ -70,3 +70,4 @@ class AuditLog {
         return $logs;
     }
 }
+

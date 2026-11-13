@@ -6,12 +6,33 @@ class Database {
 
     public static function getConnection() {
         if (self::$conn === null) {
-            $host = getenv('DB_HOST') ?: 'localhost';
+            // Tự động load .env nếu biến môi trường chưa được nạp
+            if (getenv('DB_HOST') === false && file_exists(__DIR__ . '/../.env')) {
+                require_once __DIR__ . '/../core/DotEnv.php';
+                (new \Core\DotEnv(__DIR__ . '/../.env'))->load();
+            }
+
+            $host = getenv('DB_HOST') ?: '127.0.0.1';
+            // Nếu host là localhost trên Linux, đổi sang 127.0.0.1 để tránh lỗi Unix socket
+            if ($host === 'localhost' && DIRECTORY_SEPARATOR === '/') {
+                $host = '127.0.0.1';
+            }
+
+            $port = (int)(getenv('DB_PORT') ?: 3306);
             $user = getenv('DB_USER') ?: 'root';
-            $pass = getenv('DB_PASS') ?: '';
+            $pass = (getenv('DB_PASS') !== false) ? getenv('DB_PASS') : '';
             $name = getenv('DB_NAME') ?: 'quanlysanbong';
 
-            self::$conn = new \mysqli($host, $user, $pass, $name);
+            try {
+                self::$conn = new \mysqli($host, $user, $pass, $name, $port);
+            } catch (\mysqli_sql_exception $e) {
+                // Fallback kết nối 127.0.0.1 nếu gặp lỗi socket
+                if ($host !== '127.0.0.1') {
+                    self::$conn = new \mysqli('127.0.0.1', $user, $pass, $name, $port);
+                } else {
+                    throw $e;
+                }
+            }
 
             if (self::$conn->connect_error) {
                 die("Kết nối thất bại: " . self::$conn->connect_error);

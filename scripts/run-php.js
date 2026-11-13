@@ -56,3 +56,4 @@ if (proc.error) {
 }
 
 process.exit(proc.status ?? 0);
+

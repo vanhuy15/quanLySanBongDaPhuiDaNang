@@ -52,3 +52,4 @@ echo "=======================================================\n";
 echo "  KHÔI PHỤC CƠ SỞ DỮ LIỆU THÀNH CÔNG!\n";
 echo "=======================================================\n";
 Logger::info("Database restored from: {$file}");
+

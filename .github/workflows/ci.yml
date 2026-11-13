@@ -20,6 +20,13 @@ jobs:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
+    env:
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASS: ""
+      DB_NAME: quanlysanbong
+
     steps:
     - name: Checkout Code
       uses: actions/checkout@v4
@@ -44,5 +51,9 @@ jobs:
     - name: Run Database Migrations
       run: node scripts/run-php.js database/migrate.php
 
+    - name: Run Database Seeder
+      run: node scripts/run-php.js database/seed.php
+
     - name: Run Unit Tests (PHPUnit)
       run: npm run test:unit
+

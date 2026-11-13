@@ -41,3 +41,4 @@ class Logger {
         self::log('SECURITY', $message, $context);
     }
 }
+

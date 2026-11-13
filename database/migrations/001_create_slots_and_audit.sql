@@ -27,3 +27,4 @@ CREATE TABLE IF NOT EXISTS `audit_logs` (
     INDEX `idx_target` (`target_type`, `target_id`),
     INDEX `idx_created_at` (`created_at`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

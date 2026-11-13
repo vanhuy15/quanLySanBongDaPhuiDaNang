@@ -90,3 +90,4 @@ if ($runCount === 0) {
 } else {
     echo "\nHoàn tất thực thi {$runCount} migrations thành công!\n";
 }
+

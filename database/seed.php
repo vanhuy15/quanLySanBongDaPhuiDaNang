@@ -65,3 +65,4 @@ echo "\n=======================================================\n";
 echo "  HOÀN TẤT KHỞI TẠO DỮ LIỆU SEED!\n";
 echo "=======================================================\n";
 Logger::info("Database seeded successfully.");
+

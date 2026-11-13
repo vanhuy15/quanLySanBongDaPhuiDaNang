@@ -204,12 +204,12 @@ $result = $stmt->get_result();
                                     <span class="user-cell-sub"><?php echo htmlspecialchars($row['sdt']); ?></span>
                                     <div>
                                         <?php if(!empty($row['so_lan_bung_san']) && (int)$row['so_lan_bung_san'] > 0): ?>
-                                            <span class="reputation-badge rep-danger" title="CẢNH BÁO: Khách từng bùng sân <?php echo $row['so_lan_bung_san']; ?> lần!">
-                                                Bùng <?php echo $row['so_lan_bung_san']; ?> lần
+                                            <span class="reputation-badge rep-danger" title="CẢNH BÁO: Khách từng bùng sân <?php echo $row['so_lan_bung_san']; ?> lần! Điểm uy tín hiện tại: <?php echo $uy_tin; ?>/100">
+                                                <i class="fas fa-exclamation-triangle" style="font-size: 0.72rem;"></i> Bùng <?php echo $row['so_lan_bung_san']; ?> lần (<?php echo $uy_tin; ?>đ)
                                             </span>
                                         <?php else: ?>
-                                            <span class="reputation-badge <?php echo $uy_tin >= 80 ? 'rep-high' : ($uy_tin >= 60 ? 'rep-warn' : 'rep-danger'); ?>">
-                                                Uy tín: <?php echo $uy_tin; ?>/100
+                                            <span class="reputation-badge <?php echo $uy_tin >= 80 ? 'rep-high' : ($uy_tin >= 60 ? 'rep-warn' : 'rep-danger'); ?>" title="Điểm uy tín khách hàng: <?php echo $uy_tin; ?>/100">
+                                                <i class="<?php echo $uy_tin >= 80 ? 'fas fa-shield-alt' : ($uy_tin >= 60 ? 'fas fa-info-circle' : 'fas fa-exclamation-circle'); ?>" style="font-size: 0.72rem;"></i> Uy tín: <?php echo $uy_tin; ?>/100
                                             </span>
                                         <?php endif; ?>
                                     </div>

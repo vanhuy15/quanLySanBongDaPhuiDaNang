@@ -54,3 +54,4 @@ Trước khi commit bất kỳ tính năng nào, phải chạy và đảm bảo 
 - Kiểm thử bảo mật: `npm run test:security` (OWASP Automated Security Runner, 9/9 passed)
 - Kiểm thử API: `npm run test:api` (Newman / Postman)
 - Kiểm thử giao diện: `npm run test:e2e` (Playwright)
+

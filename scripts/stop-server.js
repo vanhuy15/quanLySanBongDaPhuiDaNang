@@ -15,3 +15,4 @@ try {
 } catch (e) {
     // Silently continue
 }
+

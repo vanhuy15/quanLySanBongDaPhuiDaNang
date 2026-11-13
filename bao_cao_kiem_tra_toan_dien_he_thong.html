@@ -657,42 +657,54 @@ WHERE dat_san_id = ?; // Slot sẵn sàng đón khách mới</div>
         </div>
     </div>
 
-    <!-- SECTION 3: CÁC ĐỀ XUẤT CHỜ DUYỆT -->
+    <!-- SECTION 3: CÁC ĐỀ XUẤT ĐÃ ĐƯỢC PHÊ DUYỆT & HOÀN TẤT -->
     <div class="section-card">
         <div class="section-header">
             <h2 class="section-title">
-                <i class="fas fa-lightbulb"></i> 3. Đề Xuất Nâng Cấp Kiến Trúc (Chờ Bạn Phê Duyệt)
+                <i class="fas fa-check-double"></i> 3. Đề Xuất Nâng Cấp Kiến Trúc (Đã Được Bạn Phê Duyệt &amp; Hoàn Tất 100%)
             </h2>
-            <span class="badge badge-warning"><i class="fas fa-clock"></i> Đề Xuất Phê Duyệt</span>
+            <span class="badge badge-fixed"><i class="fas fa-check-circle"></i> Đã Triển Khai Xong</span>
         </div>
 
         <!-- Proposal 1 -->
-        <div class="issue-item warning">
+        <div class="issue-item fixed">
             <div class="issue-header">
                 <span class="issue-title-text">
-                    <i class="fas fa-layer-group" style="color: #d97706;"></i>
+                    <i class="fas fa-layer-group" style="color: #10b981;"></i>
                     Đề xuất 1: Thu gọn và hợp nhất toàn bộ Admin Portal về Controller trung tâm
                 </span>
-                <span class="badge badge-proposal">Kiến Trúc MVC</span>
+                <span class="badge badge-fixed">Đã Hoàn Tất</span>
             </div>
             <div class="issue-body">
-                <strong>Hiện trạng:</strong> Trong thư mục <code>admin/</code> hiện nay đang dùng cấu trúc lai: có các file PHP chạy trực tiếp (như <code>capnhat.php</code>, <code>xoa.php</code>) song song với các Model. Đồng thời tồn tại file <code>views/admin/bookings.php</code> cũ không dùng đến.
-                <br><strong>Đề xuất:</strong> Ở giai đoạn phát triển mở rộng tiếp theo, chúng ta nên chuyển toàn bộ các hành động xử lý đơn đặt sân, doanh thu về các Controller chuẩn (ví dụ <code>AdminBookingController</code>) để đạt chuẩn MVC 100%, dễ viết Unit Test tự động cho Controller hơn.
+                <strong>Đã thực hiện:</strong> Đã chuẩn hóa <code>controllers/AdminController.php</code> quản trị tập trung tất cả các module (Bookings, Pitches, Schedules, Users, Revenue, Reviews), tự động xác thực phân quyền admin và định tuyến an toàn. Đã dọn dẹp sạch sẽ các tệp prototype cũ không còn sử dụng (<code>views/admin/bookings.php</code>, <code>views/admin/booking_rows.php</code>, <code>admin/js/bookings.js</code>).
             </div>
         </div>
 
         <!-- Proposal 2 -->
-        <div class="issue-item warning">
+        <div class="issue-item fixed">
             <div class="issue-header">
                 <span class="issue-title-text">
-                    <i class="fas fa-history" style="color: #d97706;"></i>
+                    <i class="fas fa-history" style="color: #10b981;"></i>
                     Đề xuất 2: Bổ sung Cron Job nhả sân tự động không phụ thuộc người dùng
                 </span>
-                <span class="badge badge-proposal">Vận Hành Tự Động</span>
+                <span class="badge badge-fixed">Đã Hoàn Tất</span>
             </div>
             <div class="issue-body">
-                <strong>Hiện trạng:</strong> Cơ chế tự động giải phóng slot sau 10 phút không thanh toán (<code>Database::cleanupExpiredBookings()</code>) hiện đang được gọi thụ động khi có người dùng truy cập trang đặt sân.
-                <br><strong>Đề xuất:</strong> Tạo một script CLI <code>scripts/cron_cleanup.php</code> và cài đặt trên Windows Task Scheduler / Linux Cron chạy mỗi 2 phút một lần để giải phóng slot tự động liên tục ngay cả khi vào ban đêm không có khách truy cập.
+                <strong>Đã thực hiện:</strong> Đã xây dựng daemon worker <a href="file:///d:/XAMPP/htdocs/quanlysanbong/scripts/cron_cleanup_slots.php"><code>scripts/cron_cleanup_slots.php</code></a> và file thực thi nền Windows <a href="file:///d:/XAMPP/htdocs/quanlysanbong/scripts/run_cleanup_loop.bat"><code>scripts/run_cleanup_loop.bat</code></a>, đồng thời tích hợp lệnh <code>npm run slots:cleanup</code> vào <code>package.json</code>. Hệ thống tự động quét và giải phóng slot quá hạn 10 phút liên tục 24/7 mà không cần chờ người dùng truy cập web.
+            </div>
+        </div>
+
+        <!-- Proposal 3 -->
+        <div class="issue-item fixed">
+            <div class="issue-header">
+                <span class="issue-title-text">
+                    <i class="fas fa-medal" style="color: #10b981;"></i>
+                    Đề xuất 3: Nâng cấp trực quan Huy hiệu Điểm Uy tín tại Quản lý Đặt sân
+                </span>
+                <span class="badge badge-fixed">Đã Hoàn Tất</span>
+            </div>
+            <div class="issue-body">
+                <strong>Đã thực hiện:</strong> Đã cập nhật giao diện trong <a href="file:///d:/XAMPP/htdocs/quanlysanbong/admin/datsan/index.php"><code>admin/datsan/index.php</code></a>: hiển thị kèm icon cảnh báo <code>&lt;i class="fas fa-exclamation-triangle"&gt;</code> cùng số điểm chính xác khi khách có tiền sử bùng sân (ví dụ: <code>Bùng 1 lần (75đ)</code>), và icon khiên bảo vệ <code>&lt;i class="fas fa-shield-alt"&gt;</code> cho khách uy tín cao (ví dụ: <code>Uy tín: 100/100</code>).
             </div>
         </div>
     </div>

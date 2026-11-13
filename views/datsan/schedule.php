@@ -53,24 +53,13 @@ use Models\DatSan;
             // Tính số sân còn lại theo chế độ
             $has_available_slot = false;
         ?>
-            <tr class="schedule-row <?php echo $is_slot_expired ? 'row-expired' : ''; ?>" style="<?php echo $is_slot_expired ? 'background: #f8fafc; opacity: 0.65;' : ''; ?>">
+            <tr class="schedule-row <?php echo $is_slot_expired ? 'row-expired' : ''; ?>" style="<?php echo $is_slot_expired ? 'background: #f8fafc; opacity: 0.75;' : ''; ?>">
                 <td>
                     <strong><?php echo date("H:i", strtotime($kg['gio_bat_dau'])) . ' - ' . date("H:i", strtotime($kg['gio_ket_thuc'])); ?></strong>
-                    <?php if ($is_slot_expired): ?>
-                        <div style="font-size: 0.75rem; color: #ef4444; font-weight: 600; margin-top: 3px;">
-                            <i class="fas fa-exclamation-circle"></i> Đã đóng
-                        </div>
-                    <?php endif; ?>
                 </td>
                 <td class="price-cell"><?php echo number_format($gia_hien_thi); ?> VND</td>
 
                 <td>
-                    <?php if ($is_slot_expired): ?>
-                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; color: #64748b; font-weight: 600; font-size: 0.88rem; background: #f1f5f9; border-radius: 8px; border: 1px dashed #cbd5e1;">
-                            <i class="fas fa-clock" style="font-size: 1rem; color: #94a3b8;"></i>
-                            <span>Khung giờ đã trôi qua (hoặc dưới 5 phút)</span>
-                        </div>
-                    <?php else: ?>
                     <div class="mini-pitch-map" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                         <?php
                         if ($view_mode === 'san_5') {
@@ -79,13 +68,16 @@ use Models\DatSan;
                                 $pitch_name = $sub_pitches[$i] ?? ($i + 1);
                                 $is_booked = in_array($pitch_name, $locked_sub_pitches);
                                 
-                                if (!$is_booked) $has_available_slot = true;
-
                                 if ($is_booked) {
                                     // SÂN 5 - ĐÃ ĐẶT: đỏ, X mark
-                                    echo "<svg class='mini-pitch-svg booked' viewBox='0 0 80 115' title='Sân $pitch_name đã đặt'><rect width='80' height='115' rx='9' fill='#ef4444'/><rect x='6' y='6' width='68' height='76' rx='3' fill='none' stroke='white' stroke-width='1.2' opacity='0.25'/><line x1='6' y1='44' x2='74' y2='44' stroke='white' stroke-width='1.2' opacity='0.25'/><circle cx='40' cy='44' r='9' fill='none' stroke='white' stroke-width='1.2' opacity='0.25'/><line x1='28' y1='26' x2='52' y2='60' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><line x1='52' y1='26' x2='28' y2='60' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><rect x='12' y='91' width='56' height='18' rx='9' fill='rgba(255,255,255,0.18)'/><text x='40' y='100' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='9' font-weight='700' fill='rgba(255,255,255,0.85)'>Đã đặt</text></svg>";
+                                    $booked_style = $is_slot_expired ? "style='cursor: not-allowed; opacity: 0.5; pointer-events: none;'" : "";
+                                    echo "<svg class='mini-pitch-svg booked' $booked_style viewBox='0 0 80 115' title='Sân $pitch_name đã đặt'><rect width='80' height='115' rx='9' fill='#ef4444'/><rect x='6' y='6' width='68' height='76' rx='3' fill='none' stroke='white' stroke-width='1.2' opacity='0.25'/><line x1='6' y1='44' x2='74' y2='44' stroke='white' stroke-width='1.2' opacity='0.25'/><circle cx='40' cy='44' r='9' fill='none' stroke='white' stroke-width='1.2' opacity='0.25'/><line x1='28' y1='26' x2='52' y2='60' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><line x1='52' y1='26' x2='28' y2='60' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><rect x='12' y='91' width='56' height='18' rx='9' fill='rgba(255,255,255,0.18)'/><text x='40' y='100' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='9' font-weight='700' fill='rgba(255,255,255,0.85)'>Đã đặt</text></svg>";
+                                } elseif ($is_slot_expired) {
+                                    // SÂN 5 - ĐÃ QUA GIỜ: màu xám (kiểu ẩn), không click được
+                                    echo "<svg class='mini-pitch-svg expired' style='cursor: not-allowed; pointer-events: none; opacity: 0.6;' viewBox='0 0 80 115' title='Sân $pitch_name (Đã qua giờ)'><rect class='pitch-fill' width='80' height='115' rx='9' fill='#94a3b8'/><rect x='6' y='6' width='68' height='76' rx='3' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><line x1='6' y1='44' x2='74' y2='44' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='40' cy='44' r='9' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='40' cy='44' r='2' fill='white' opacity='0.5'/><rect x='20' y='6' width='40' height='10' fill='none' stroke='white' stroke-width='1' opacity='0.28'/><rect x='20' y='72' width='40' height='10' fill='none' stroke='white' stroke-width='1' opacity='0.28'/><rect x='16' y='90' width='48' height='19' rx='9.5' fill='white' opacity='0.95'/><text x='40' y='100' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='13' font-weight='800' fill='#64748b'>$pitch_name</text></svg>";
                                 } else {
-                                    // SÂN 5 - TRỐNG: teal xanh, field lines, letter badge
+                                    // SÂN 5 - TRỐNG KHẢ DỤNG: teal xanh, click được
+                                    $has_available_slot = true;
                                     echo "<svg class='mini-pitch-svg available' data-pitch-name='$pitch_name' data-lock-keys='$pitch_name' data-mode='san_5' viewBox='0 0 80 115' title='Sân $pitch_name (Trống)'><rect class='pitch-fill' width='80' height='115' rx='9' fill='#0d9488'/><rect x='6' y='6' width='68' height='76' rx='3' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><line x1='6' y1='44' x2='74' y2='44' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='40' cy='44' r='9' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='40' cy='44' r='2' fill='white' opacity='0.5'/><rect x='20' y='6' width='40' height='10' fill='none' stroke='white' stroke-width='1' opacity='0.28'/><rect x='20' y='72' width='40' height='10' fill='none' stroke='white' stroke-width='1' opacity='0.28'/><rect x='16' y='90' width='48' height='19' rx='9.5' fill='white' opacity='0.95'/><text x='40' y='100' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='13' font-weight='800' fill='#0d9488'>$pitch_name</text></svg>";
                                 }
                             }
@@ -100,23 +92,26 @@ use Models\DatSan;
                                 $conflict_pitches = array_intersect($g_comps, $locked_sub_pitches);
                                 $is_group_locked = (count($conflict_pitches) > 0);
 
-                                if (!$is_group_locked) $has_available_slot = true;
-
                                 if ($is_group_locked) {
                                     $conflict_str = implode(', ', $conflict_pitches);
                                     $g_num = $g7['num'] ?? 1;
+                                    $booked_style = $is_slot_expired ? "style='cursor: not-allowed; opacity: 0.5; pointer-events: none;'" : "";
                                     // SÂN 7 - ĐÃ ĐẶT: đỏ, field markings mờ, X mark
-                                    echo "<svg class='mini-pitch-svg pitch-7 booked' viewBox='0 0 95 130' title='Sân 7.$g_num bị chặn ($conflict_str đã đặt)'><rect width='95' height='130' rx='9' fill='#ef4444'/><rect x='7' y='8' width='81' height='96' rx='3' fill='none' stroke='white' stroke-width='1.3' opacity='0.2'/><line x1='7' y1='56' x2='88' y2='56' stroke='white' stroke-width='1.3' opacity='0.2'/><circle cx='47.5' cy='56' r='11' fill='none' stroke='white' stroke-width='1.3' opacity='0.2'/><rect x='24' y='8' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><path d='M 38.5 21 A 9 9 0 0 0 56.5 21' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><rect x='24' y='91' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><path d='M 38.5 91 A 9 9 0 0 1 56.5 91' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><line x1='30' y1='34' x2='65' y2='78' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><line x1='65' y1='34' x2='30' y2='78' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><rect x='15' y='109' width='65' height='18' rx='9' fill='rgba(255,255,255,0.18)'/><text x='47.5' y='118' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='9' font-weight='700' fill='rgba(255,255,255,0.85)'>Đã đặt</text></svg>";
-                                } else {
+                                    echo "<svg class='mini-pitch-svg pitch-7 booked' $booked_style viewBox='0 0 95 130' title='Sân 7.$g_num bị chặn ($conflict_str đã đặt)'><rect width='95' height='130' rx='9' fill='#ef4444'/><rect x='7' y='8' width='81' height='96' rx='3' fill='none' stroke='white' stroke-width='1.3' opacity='0.2'/><line x1='7' y1='56' x2='88' y2='56' stroke='white' stroke-width='1.3' opacity='0.2'/><circle cx='47.5' cy='56' r='11' fill='none' stroke='white' stroke-width='1.3' opacity='0.2'/><rect x='24' y='8' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><path d='M 38.5 21 A 9 9 0 0 0 56.5 21' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><rect x='24' y='91' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><path d='M 38.5 91 A 9 9 0 0 1 56.5 91' fill='none' stroke='white' stroke-width='1' opacity='0.15'/><line x1='30' y1='34' x2='65' y2='78' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><line x1='65' y1='34' x2='30' y2='78' stroke='white' stroke-width='3.5' stroke-linecap='round' opacity='0.9'/><rect x='15' y='109' width='65' height='18' rx='9' fill='rgba(255,255,255,0.18)'/><text x='47.5' y='118' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='9' font-weight='700' fill='rgba(255,255,255,0.85)'>Đã đặt</text></svg>";
+                                } elseif ($is_slot_expired) {
                                     $g_num = $g7['num'] ?? 1;
-                                    // SÂN 7 - TRỐNG: teal xanh, penalty box + D-arc 2 đầu, badge 7.N
+                                    // SÂN 7 - ĐÃ QUA GIỜ: màu xám (kiểu ẩn), không click được
+                                    echo "<svg class='mini-pitch-svg pitch-7 expired' style='cursor: not-allowed; pointer-events: none; opacity: 0.6;' viewBox='0 0 95 130' title='$g_name (Đã qua giờ)'><rect class='pitch-fill' width='95' height='130' rx='9' fill='#94a3b8'/><rect x='7' y='8' width='81' height='96' rx='3' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><line x1='7' y1='56' x2='88' y2='56' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='47.5' cy='56' r='11' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='47.5' cy='56' r='2' fill='white' opacity='0.5'/><rect x='24' y='8' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><path d='M 38.5 21 A 9 9 0 0 0 56.5 21' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><rect x='24' y='91' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><path d='M 38.5 91 A 9 9 0 0 1 56.5 91' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><rect x='15' y='109' width='65' height='19' rx='9.5' fill='white' opacity='0.95'/><text x='47.5' y='118.5' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='12' font-weight='800' fill='#64748b'>7.$g_num</text></svg>";
+                                } else {
+                                    // SÂN 7 - TRỐNG KHẢ DỤNG: teal xanh, click được
+                                    $has_available_slot = true;
+                                    $g_num = $g7['num'] ?? 1;
                                     echo "<svg class='mini-pitch-svg pitch-7 available' data-pitch-name='$g_name' data-lock-keys='$g_key' data-mode='san_7' viewBox='0 0 95 130' title='$g_name (Trống)'><rect class='pitch-fill' width='95' height='130' rx='9' fill='#0d9488'/><rect x='7' y='8' width='81' height='96' rx='3' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><line x1='7' y1='56' x2='88' y2='56' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='47.5' cy='56' r='11' fill='none' stroke='white' stroke-width='1.3' opacity='0.4'/><circle cx='47.5' cy='56' r='2' fill='white' opacity='0.5'/><rect x='24' y='8' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><path d='M 38.5 21 A 9 9 0 0 0 56.5 21' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><rect x='24' y='91' width='47' height='13' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><path d='M 38.5 91 A 9 9 0 0 1 56.5 91' fill='none' stroke='white' stroke-width='1' opacity='0.32'/><rect x='15' y='109' width='65' height='19' rx='9.5' fill='white' opacity='0.95'/><text x='47.5' y='118.5' text-anchor='middle' dominant-baseline='middle' font-family='Inter,sans-serif' font-size='12' font-weight='800' fill='#0d9488'>7.$g_num</text></svg>";
                                 }
                             }
                         }
                         ?>
                     </div>
-                    <?php endif; ?>
                 </td>
                 <td>
                     <?php if ($is_slot_expired): ?>

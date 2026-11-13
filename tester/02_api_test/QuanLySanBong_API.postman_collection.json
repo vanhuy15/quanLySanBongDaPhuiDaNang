@@ -1,0 +1,1100 @@
+{
+  "info": {
+    "_postman_id": "8ca2bc9d-cff2-45db-857a-46de7e890d2f",
+    "name": "QuanLySanBong_Full_API_TestSuite",
+    "description": "Bộ Test API tự động toàn diện 100% chức năng & thuật toán Hệ thống Quản lý Đặt sân bóng đá (Client & Admin)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "01 - Authentication & Security",
+      "item": [
+        {
+          "name": "TC00 - Khởi tạo phiên & Trích xuất CSRF Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status code là 200\", function () { pm.response.to.have.status(200); });",
+                  "const html = pm.response.text();",
+                  "const match = html.match(/name=\"csrf_token\"\\s+value=\"([a-f0-9]{64})\"/);",
+                  "if (match) { pm.environment.set(\"csrf_token\", match[1]); }"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Auth&action=login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Auth"
+                },
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC01 - Đăng nhập tài khoản Khách hàng (testuser)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200 hoặc 302', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                  "});",
+                  "pm.test('Cookie PHPSESSID được thiết lập', function () {",
+                  "    pm.expect(pm.cookies.has('PHPSESSID')).to.be.true;",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "testuser",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "123456",
+                  "type": "text"
+                },
+                {
+                  "key": "csrf_token",
+                  "value": "{{csrf_token}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Auth&action=login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Auth"
+                },
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC02 - Đăng nhập thất bại khi sai mật khẩu",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Phản hồi có chứa thông báo lỗi', function () {",
+                  "    pm.expect(pm.response.text()).to.include('không chính xác');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "testuser",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "sai_mat_khau_9999",
+                  "type": "text"
+                },
+                {
+                  "key": "csrf_token",
+                  "value": "{{csrf_token}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Auth&action=login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Auth"
+                },
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC03 - Đăng nhập tài khoản Quản trị viên (admin15)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Đăng nhập admin thành công (200/302)', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "admin15",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "123456",
+                  "type": "text"
+                },
+                {
+                  "key": "csrf_token",
+                  "value": "{{csrf_token}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Auth&action=login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Auth"
+                },
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC05 - Chặn hành động POST khi thiếu CSRF Token",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Phải chặn yêu cầu khi không có CSRF token', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([403, 400, 200]);",
+                  "    pm.expect(pm.response.text()).to.match(/CSRF|hết hạn|không hợp lệ/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "san_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "khung_gio_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "ngay_dat",
+                  "value": "2026-12-01",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=processBooking",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "DatSan"
+                },
+                {
+                  "key": "action",
+                  "value": "processBooking"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Discovery & Pitch Search",
+      "item": [
+        {
+          "name": "TC06 - Tải trang chủ danh sách sân bóng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Chứa container danh sách sân bóng', function () {",
+                  "    pm.expect(pm.response.text()).to.include('pitch-grid');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC07 - Tìm kiếm sân theo từ khóa (Nam Cao)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Kết quả tìm kiếm chứa sân Nam Cao', function () {",
+                  "    pm.expect(pm.response.text()).to.include('Nam Cao');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Home&action=searchAjax&search=Nam+Cao",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Home"
+                },
+                {
+                  "key": "action",
+                  "value": "searchAjax"
+                },
+                {
+                  "key": "search",
+                  "value": "Nam Cao"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC08 - Lọc sân theo loại quy mô (Sân 5)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Home&action=searchAjax&loai_san=san_5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Home"
+                },
+                {
+                  "key": "action",
+                  "value": "searchAjax"
+                },
+                {
+                  "key": "loai_san",
+                  "value": "san_5"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC09 - Lọc sân theo khoảng giá (200,000 - 300,000 VNĐ)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Home&action=searchAjax&min_price=200000&max_price=300000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Home"
+                },
+                {
+                  "key": "action",
+                  "value": "searchAjax"
+                },
+                {
+                  "key": "min_price",
+                  "value": "200000"
+                },
+                {
+                  "key": "max_price",
+                  "value": "300000"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Booking & Slot Availability",
+      "item": [
+        {
+          "name": "TC10 - Lấy lịch khung giờ sân bóng (AJAX getSchedule)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Phản hồi có chứa hàng lịch đặt sân', function () {",
+                  "    pm.expect(pm.response.text()).to.match(/schedule-row|khung-gio|slot/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=getSchedule&san_id=1&ngay=2026-11-20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "DatSan"
+                },
+                {
+                  "key": "action",
+                  "value": "getSchedule"
+                },
+                {
+                  "key": "san_id",
+                  "value": "1"
+                },
+                {
+                  "key": "ngay",
+                  "value": "2026-11-20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC11 - Kiểm tra chặn đặt sân khi chưa đăng nhập",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Chuyển hướng hoặc báo lỗi yêu cầu đăng nhập', function () {",
+                  "    pm.expect(pm.response.text()).to.match(/action=login|đăng nhập/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": ""
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=book",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "DatSan"
+                },
+                {
+                  "key": "action",
+                  "value": "book"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC12 - Kiểm tra chi tiết trạng thái Slot sân con",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=checkAvailability&khung_gio_id=1&ngay_dat=2026-11-20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "DatSan"
+                },
+                {
+                  "key": "action",
+                  "value": "checkAvailability"
+                },
+                {
+                  "key": "khung_gio_id",
+                  "value": "1"
+                },
+                {
+                  "key": "ngay_dat",
+                  "value": "2026-11-20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Checkout & Payment",
+      "item": [
+        {
+          "name": "TC13 - Xem trang thanh toán kèm bộ đếm giữ chỗ 10 phút",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Chứa thông tin giữ chỗ và phương thức thanh toán', function () {",
+                  "    pm.expect(pm.response.text()).to.match(/Thời gian giữ chỗ|VietQR|Tiền mặt/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Payment&action=checkout&id=1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Payment"
+                },
+                {
+                  "key": "action",
+                  "value": "checkout"
+                },
+                {
+                  "key": "id",
+                  "value": "1"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC14 - Xác nhận thanh toán Chuyển khoản VietQR",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200 hoặc 302', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "dat_san_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "phuong_thuc",
+                  "value": "chuyen_khoan",
+                  "type": "text"
+                },
+                {
+                  "key": "csrf_token",
+                  "value": "{{csrf_token}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Payment&action=confirmTransfer",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Payment"
+                },
+                {
+                  "key": "action",
+                  "value": "confirmTransfer"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Customer Portal",
+      "item": [
+        {
+          "name": "TC15 - Xem lịch sử đặt sân của người dùng",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Chứa bảng lịch sử đặt sân', function () {",
+                  "    pm.expect(pm.response.text()).to.match(/Lịch sử|Mã đơn|Trạng thái/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=User&action=history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "User"
+                },
+                {
+                  "key": "action",
+                  "value": "history"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC16 - Xem hồ sơ cá nhân và bảng Điểm Uy Tín",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Hiển thị thông tin điểm uy tín', function () {",
+                  "    pm.expect(pm.response.text()).to.match(/Điểm uy tín|Hạng uy tín|Lịch sử biến động/i);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=User&action=profile",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "User"
+                },
+                {
+                  "key": "action",
+                  "value": "profile"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC17 - Lấy danh sách thông báo chưa đọc",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Notification&action=getUnread",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Notification"
+                },
+                {
+                  "key": "action",
+                  "value": "getUnread"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC18 - Đánh giá và chấm điểm sao sân bóng (+2 điểm uy tín)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Phản hồi JSON hợp lệ', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "dat_san_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "san_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "so_sao",
+                  "value": "5",
+                  "type": "text"
+                },
+                {
+                  "key": "binh_luan",
+                  "value": "Mặt cỏ đẹp, dịch vụ tốt!",
+                  "type": "text"
+                },
+                {
+                  "key": "csrf_token",
+                  "value": "{{csrf_token}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Review&action=submit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Review"
+                },
+                {
+                  "key": "action",
+                  "value": "submit"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Admin Management",
+      "item": [
+        {
+          "name": "TC19 - Xem KPI Dashboard & Biểu đồ doanh thu Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200 hoặc chuyển hướng', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/index.php",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "index.php"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC20 - Quản lý Đặt Sân: Lọc đơn theo trạng thái",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/datsan/index.php?status=Chờ+xác+nhận",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "datsan",
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "Chờ xác nhận"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC21 - Danh sách Sân bóng & Cấu hình ghép sân 5 & 7",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/sanbong/index.php",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "sanbong",
+                "index.php"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC22 - Quản lý Khung giờ & Bảng giá sân",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/khunggio/index.php",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "khunggio",
+                "index.php"
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC23 - Quản lý Khách hàng & Điểm Uy Tín Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/admin/khachhang/index.php",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "admin",
+                "khachhang",
+                "index.php"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

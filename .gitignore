@@ -1,0 +1,70 @@
+# ====================================================
+# .gitignore — Hệ Thống Quản Lý Sân Bóng
+# ====================================================
+
+# =========================
+# 🔐 BẢO MẬT - QUAN TRỌNG
+# =========================
+.env
+*.env
+.env.local
+.env.production
+
+# =========================
+# 📁 UPLOADED FILES
+# =========================
+images/avatar/*
+!images/avatar/.gitkeep
+images/san_bong/*
+!images/san_bong/.gitkeep
+
+# =========================
+# 📦 DEPENDENCIES
+# =========================
+vendor/
+composer.lock
+
+# =========================
+# 💻 IDE & EDITOR
+# =========================
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# =========================
+# 🖥️ OS FILES
+# =========================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# =========================
+# 🌐 PHP / SERVER
+# =========================
+*.log
+error_log
+php_errors.log
+
+# =========================
+# 📊 EXPORTS TẠM THỜI
+# =========================
+*.xlsx
+*.xls
+exports/
+
+# =========================
+# 🧪 TESTING & BUILD ARTIFACTS
+# =========================
+node_modules/
+playwright-report/
+test-results/
+.phpunit.result.cache
+tester/**/playwright-report/
+tester/**/test-results/
+tester/**/.phpunit.result.cache
+tester/preview_*.png
+*.jtl
+report_read/
+report_race/
+

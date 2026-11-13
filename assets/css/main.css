@@ -1,0 +1,12 @@
+/* ==========================================================================
+   USER-FACING MASTER STYLESHEET (MODULAR ENTRY)
+   Modular architecture for ease of maintenance & scalable UI updates.
+   Decomposed into dedicated modules in /assets/css/modules/
+   ========================================================================== */
+
+@import url('modules/base.css');
+@import url('modules/header.css');
+@import url('modules/search.css');
+@import url('modules/cards.css');
+@import url('modules/footer.css');
+@import url('modules/utilities.css');

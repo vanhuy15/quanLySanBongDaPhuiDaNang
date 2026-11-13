@@ -1,0 +1,313 @@
+/* ==========================================================================
+   ADMIN UI COMPONENTS MODULE (components.css)
+   Buttons, Badges, Status Pills, Reputation Tags, Avatar Letters & Alerts
+   ========================================================================== */
+
+/* 1. BUTTONS */
+.btn-primary-modern {
+    background: var(--primary);
+    color: #ffffff;
+    padding: 9px 18px;
+    border-radius: var(--radius-md);
+    font-weight: 700;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    box-shadow: 0 2px 6px rgba(0, 122, 100, 0.2);
+    text-decoration: none;
+}
+
+.btn-primary-modern:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(0, 122, 100, 0.3);
+    color: #ffffff;
+}
+
+.btn-outline-modern {
+    background: #ffffff;
+    color: var(--text-body);
+    border: 1px solid var(--border);
+    padding: 9px 18px;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn-outline-modern:hover {
+    background: var(--border-light);
+    border-color: #cbd5e1;
+}
+
+.action-buttons-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-action-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-sm);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.btn-action-icon.btn-accept {
+    background: #007a64;
+    color: #ffffff;
+}
+
+.btn-action-icon.btn-accept:hover {
+    background: #00604e;
+    transform: scale(1.05);
+}
+
+.btn-action-icon.btn-cancel {
+    background: #f1f5f9;
+    color: #64748b;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-action-icon.btn-cancel:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+    border-color: #fca5a5;
+}
+
+.btn-action-icon.btn-refund {
+    background: #7e22ce;
+    color: #ffffff;
+}
+
+.btn-action-icon.btn-refund:hover {
+    background: #6b21a8;
+}
+
+.btn-action-icon.btn-edit {
+    background: #f1f5f9;
+    color: #0284c7;
+    border: 1px solid #e2e8f0;
+}
+
+.btn-action-icon.btn-edit:hover {
+    background: #e0f2fe;
+    border-color: #bae6fd;
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    border: 1px solid #e2e8f0;
+    color: #475569;
+    padding: 7px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-back:hover {
+    background: #e2e8f0;
+}
+
+.btn-del {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+    border-radius: 7px;
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.btn-del:hover {
+    background: #dc2626;
+    color: white;
+}
+
+/* 2. BADGES & STATUS PILLS */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    font-size: 0.78rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: currentColor;
+}
+
+.badge-cho {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+
+.badge-xacnhan {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.badge-hoantien {
+    background: #f3e8ff;
+    color: #7e22ce;
+    border: 1px solid #e9d5ff;
+}
+
+.badge-dahoan {
+    background: #e0f2fe;
+    color: #0369a1;
+    border: 1px solid #bae6fd;
+}
+
+.badge-huy {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+}
+
+.badge-active {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.badge-locked {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+/* 3. REPUTATION BADGES */
+.reputation-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-top: 2px;
+}
+
+.rep-high {
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #a7f3d0;
+}
+
+.rep-warn {
+    background: #fffbeb;
+    color: #d97706;
+    border: 1px solid #fde68a;
+}
+
+.rep-danger {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
+}
+
+/* 4. PAYMENT METHOD TAGS */
+.pay-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 6px;
+}
+
+.pay-tag-qr {
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #bfdbfe;
+}
+
+.pay-tag-cash {
+    background: #f0fdf4;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+.text-amount-bold {
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* 5. AVATAR LETTERS */
+.avatar-letter {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #e2e8f0;
+    color: #475569;
+    font-weight: 700;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.avatar-blue {
+    background: #e0f2fe;
+    color: #0284c7;
+}
+
+.avatar-teal {
+    background: #ccfbf1;
+    color: #0f766e;
+}
+
+.avatar-purple {
+    background: #f3e8ff;
+    color: #7e22ce;
+}
+
+.avatar-amber {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+/* 6. ALERTS */
+.alert-ok {
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    padding: 0.8rem 1.2rem;
+    border-radius: 10px;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+}

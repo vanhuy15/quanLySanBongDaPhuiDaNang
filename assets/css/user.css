@@ -1,0 +1,392 @@
+/* =======================================
+   HISTORY & PROFILE
+======================================= */
+.profile-page-wrapper {
+    max-width: 1040px;
+    margin: 2.5rem auto 4rem;
+    padding: 0 1.5rem;
+}
+
+/* User Profile Header Banner */
+.profile-banner {
+    background: linear-gradient(135deg, #0d9488, #0f766e);
+    border-radius: 20px;
+    padding: 2.2rem 2.5rem;
+    color: white;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 10px 30px rgba(13, 148, 136, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 1.8rem;
+}
+
+.avatar-upload-wrapper {
+    position: relative;
+    width: 86px;
+    height: 86px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    flex-shrink: 0;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    background: #0f766e;
+}
+.avatar-upload-wrapper:hover {
+    transform: scale(1.04);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+.user-main-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+.avatar-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(2px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 0.72rem;
+    font-weight: 600;
+    gap: 2px;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+}
+.avatar-overlay i {
+    font-size: 1.15rem;
+}
+.avatar-upload-wrapper:hover .avatar-overlay {
+    opacity: 1;
+}
+.avatar-spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(13, 148, 136, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.4rem;
+    z-index: 5;
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 250px;
+}
+.profile-info h1 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: #ffffff;
+}
+.profile-info p {
+    margin: 0;
+    opacity: 0.95;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+/* User Quick Stats Bar */
+.profile-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.8rem;
+}
+@media (max-width: 768px) {
+    .profile-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+.profile-stat-box {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 1.2rem 1.4rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.profile-stat-box .stat-label {
+    font-size: 0.82rem;
+    color: #64748b;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+.profile-stat-box .stat-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+/* Reputation Score Tier Card */
+.tier-card {
+    border-radius: 16px;
+    padding: 1.4rem 1.8rem;
+    margin-bottom: 1.8rem;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+.tier-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 12px;
+}
+.tier-title {
+    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 700;
+}
+.tier-desc {
+    margin: 3px 0 0 0;
+    font-size: 0.86rem;
+    color: #64748b;
+}
+.tier-score-container {
+    text-align: right;
+}
+.tier-score {
+    font-size: 1.6rem;
+    font-weight: 800;
+}
+.tier-score-max {
+    font-size: 0.95rem;
+    color: #64748b;
+    font-weight: 600;
+}
+.tier-penalty {
+    font-size: 0.8rem;
+    color: #dc2626;
+    font-weight: 700;
+}
+.tier-progress-bg {
+    background: rgba(0,0,0,0.08);
+    border-radius: 50px;
+    height: 10px;
+    overflow: hidden;
+    width: 100%;
+}
+.tier-progress-bar {
+    height: 100%;
+    border-radius: 50px;
+    transition: width 0.4s ease;
+}
+
+/* Two Separate Cards Layout for Profile & Security */
+.profile-forms-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.8rem;
+}
+@media (max-width: 860px) {
+    .profile-forms-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.profile-card-box {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 2rem;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+}
+.profile-card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1.5px solid #f1f5f9;
+}
+.profile-card-header h2 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+.profile-card-header p {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin: 4px 0 0 0;
+}
+
+.form-group {
+    margin-bottom: 1.2rem;
+}
+.form-group label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.88rem;
+}
+.form-group input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+.form-group input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+}
+.form-group input:disabled {
+    background: #f8fafc;
+    color: #64748b;
+    cursor: not-allowed;
+    border-color: #e2e8f0;
+}
+
+.profile-form-footer {
+    margin-top: auto;
+    padding-top: 1.4rem;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: flex-end;
+}
+.btn-save {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.7rem 1.6rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: white;
+    background: var(--primary-color);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(13, 148, 136, 0.25);
+}
+.btn-save:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.35);
+}
+
+@media (max-width: 768px) {
+    .profile-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+/* History Page Styles */
+.history-container {
+    max-width: 1400px;
+    margin: 3rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+    border: 1px solid #e2e8f0;
+}
+.history-container h2 {
+    color: #0f172a;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    margin-top: 0;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.history-table th {
+    padding: 1rem 1.25rem;
+    text-align: left;
+    background-color: transparent;
+    color: #475569;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+}
+.history-table td {
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+.history-table tr:last-child td {
+    border-bottom: none;
+}
+.status-badge {
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.status-cho { background: #fef08a; color: #854d0e; }
+.status-xacnhan { background: #dcfce7; color: #166534; }
+.status-huy { background: #fee2e2; color: #991b1b; }
+
+.empty-msg {
+    text-align: center;
+    color: #64748b;
+    font-style: italic;
+    padding: 3rem !important;
+    font-size: 1.1rem;
+}
+
+/* Password Toggle Eye Button */
+input::-ms-reveal,
+input::-ms-clear {
+    display: none !important;
+}
+
+.btn-toggle-pass {
+    position: absolute;
+    right: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 6px;
+    color: #64748b;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    transition: color 0.2s ease;
+    z-index: 10;
+}
+.btn-toggle-pass:hover {
+    color: #0f172a;
+}
+.btn-toggle-pass i {
+    font-size: 1.15rem;
+    color: inherit;
+}

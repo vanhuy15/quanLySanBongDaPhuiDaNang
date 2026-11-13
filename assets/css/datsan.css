@@ -1,0 +1,665 @@
+/* =======================================
+   BOOKING PAGE (DAT SAN) - PREMIUM
+======================================= */
+.datsan-layout {
+    max-width: 1200px;
+    margin: 3rem auto;
+    padding: 0 1.5rem;
+}
+
+.datsan-card {
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+    border: 1px solid #e2e8f0;
+}
+
+.form-chon-lich {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    align-items: flex-end;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.form-chon-lich .form-group {
+    flex: 1;
+    min-width: 250px;
+    margin-bottom: 0;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: #334155;
+    font-size: 0.95rem;
+}
+
+.select-wrapper, .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.select-icon, .input-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+}
+
+.form-group select, .form-group input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 3rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: #f8fafc;
+    outline: none;
+    font-size: 1rem;
+    color: #334155;
+    transition: all 0.25s;
+    font-weight: 500;
+    appearance: none;
+}
+.form-group input { appearance: auto; }
+
+.form-group select:focus, .form-group input:focus {
+    border-color: var(--primary-color);
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
+}
+
+.pitch-legend {
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+}
+.pitch-legend h4 {
+    font-size: 0.95rem;
+    color: #1e293b;
+    margin-bottom: 1rem;
+}
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.8rem;
+    font-size: 0.9rem;
+    color: #475569;
+}
+.legend-color {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    display: inline-block;
+}
+.legend-color.available { background: #10b981; }
+.legend-color.booked { background: #ef4444; }
+.legend-color.selected { background: #3b82f6; }
+
+
+.datsan-main {
+    flex: 1;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 4rem 0;
+    color: #64748b;
+}
+.loading-state i {
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+
+.lichsu-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #ffffff;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+
+.lichsu-table th {
+    padding: 1.5rem;
+    text-align: left;
+    background-color: #f8fafc;
+    color: #475569;
+    font-weight: 600;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.schedule-row td {
+    padding: 1.5rem;
+    vertical-align: middle;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    white-space: nowrap;
+}
+
+.schedule-row:last-child td {
+    border-bottom: none;
+}
+
+.schedule-row:hover td {
+    background: #f8fafc;
+}
+
+.time-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: inline-block;
+}
+
+.schedule-row.active-row td {
+    background: #f0fdfa;
+    border-color: #99f6e4;
+}
+
+.lichsu-table th {
+    text-align: left;
+    color: #475569;
+    font-weight: 600;
+    padding: 0 1rem 0.5rem 1rem;
+}
+
+.price-cell {
+    font-weight: 700;
+    color: #0d9488;
+    font-size: 1.1rem;
+}
+
+.btn-thanhtoan {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    font-size: 0.95rem;
+}
+.btn-thanhtoan:disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+}
+.btn-thanhtoan:not(:disabled):hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.3);
+}
+
+/* =======================================
+   MINI PITCH MAP (SVG)
+======================================= */
+.mini-pitch-map {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.mini-pitch-svg {
+    width: 48px;
+    height: 69px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border-radius: 7px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
+}
+/* Sân 7: rộng hơn sân 5 để gợi ý sân lớn hơn */
+.mini-pitch-svg.pitch-7 {
+    width: 57px;
+    height: 78px;
+}
+
+/* Fill class - cả sân 5 và sân 7 đều dùng teal */
+.mini-pitch-svg .pitch-fill {
+    fill: #0d9488;
+    transition: fill 0.25s ease;
+}
+
+/* Booked state */
+.mini-pitch-svg.booked {
+    opacity: 0.85;
+    cursor: not-allowed;
+}
+
+/* Available hover - Sân 5 */
+.mini-pitch-svg.available:not(.pitch-7):hover {
+    transform: scale(1.08) translateY(-3px);
+    filter: drop-shadow(0 6px 10px rgba(13, 148, 136, 0.4));
+}
+.mini-pitch-svg.available:not(.pitch-7):hover .pitch-fill {
+    fill: #0f766e;
+}
+
+/* Available hover - Sân 7 (cùng teal nhưng shadow nhẹ hơn do card to hơn) */
+.mini-pitch-svg.pitch-7.available:hover {
+    transform: scale(1.06) translateY(-3px);
+    filter: drop-shadow(0 6px 12px rgba(13, 148, 136, 0.45));
+}
+.mini-pitch-svg.pitch-7.available:hover .pitch-fill {
+    fill: #0f766e;
+}
+
+/* Selected state - Sân 5 */
+.mini-pitch-svg.selected:not(.pitch-7) .pitch-fill {
+    fill: #2563eb !important;
+}
+.mini-pitch-svg.selected:not(.pitch-7) {
+    transform: scale(1.12) translateY(-5px);
+    filter: drop-shadow(0 8px 16px rgba(37, 99, 235, 0.5));
+}
+
+/* Selected state - Sân 7 */
+.mini-pitch-svg.pitch-7.selected .pitch-fill {
+    fill: #7c3aed !important;
+}
+.mini-pitch-svg.pitch-7.selected {
+    transform: scale(1.08) translateY(-5px);
+    filter: drop-shadow(0 8px 16px rgba(124, 58, 237, 0.5));
+}
+
+/* =======================================
+   PAYMENT PAGE
+======================================= */
+.thanhtoan-container {
+    max-width: 650px;
+    margin: 2.5rem auto;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+    text-align: center;
+}
+.thanhtoan-container h2 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    color: #0f172a;
+    font-size: 1.55rem;
+    font-weight: 800;
+    text-align: center;
+}
+.payment-countdown {
+    background: #fffbeb;
+    border: 1.5px solid #fde68a;
+    border-radius: 12px;
+    padding: 12px 18px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #92400e;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.payment-countdown strong {
+    color: #dc2626;
+    font-size: 1.15rem;
+    font-weight: 800;
+    font-family: monospace;
+    letter-spacing: 1px;
+}
+.thongtin-datsan {
+    background: #f8fafc;
+    padding: 1.25rem 1.75rem;
+    border-radius: 14px;
+    margin: 1.5rem auto;
+    font-size: 0.95rem;
+    border: 1px solid #e2e8f0;
+    max-width: 440px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+.booking-info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px dashed #e2e8f0;
+}
+.booking-info-row:last-child {
+    border-bottom: none;
+    padding-top: 6px;
+}
+.booking-info-row .info-label {
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.92rem;
+}
+.booking-info-row .info-value {
+    color: #1e293b;
+    font-weight: 700;
+    font-size: 0.96rem;
+}
+.price-highlight {
+    color: #dc2626;
+    font-weight: 800;
+    font-size: 1.25rem;
+}
+.payment-method-title {
+    text-align: center;
+    margin-bottom: 1rem;
+    color: #1e293b;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+.payment-methods {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.8rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.payment-card {
+    flex: 1;
+    min-width: 200px;
+    max-width: 260px;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.25rem 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    position: relative;
+    background: #ffffff;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.payment-card:hover:not(.locked) {
+    border-color: #0d9488;
+    background: #f0fdfa;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.1);
+}
+.payment-card:has(input:checked) {
+    border-color: var(--primary-color) !important;
+    background-color: #f0fdfa !important;
+    box-shadow: 0 4px 14px rgba(13, 148, 136, 0.18);
+    transform: translateY(-2px);
+}
+.payment-card.locked {
+    border: 2px dashed #fca5a5;
+    background: #fef2f2;
+    opacity: 0.75;
+    cursor: not-allowed;
+}
+.payment-card-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    text-align: center;
+    width: 100%;
+}
+.payment-card-icon {
+    font-size: 1.6rem;
+    color: #64748b;
+    transition: all 0.2s;
+}
+.payment-card:hover .payment-card-icon,
+.payment-card:has(input:checked) .payment-card-icon {
+    color: var(--primary-color);
+}
+.payment-card.locked .payment-card-icon {
+    color: #dc2626;
+}
+.payment-card-title {
+    display: block;
+    font-size: 1.05rem;
+    color: #1e293b;
+    font-weight: 700;
+    text-align: center;
+}
+.payment-card:has(input:checked) .payment-card-title {
+    color: var(--primary-color);
+}
+.payment-card-sub {
+    font-size: 0.8rem;
+    color: #64748b;
+    text-align: center;
+}
+.payment-card-sub.warn {
+    color: #b91c1c;
+    font-weight: 600;
+}
+
+/* VietQR Box & Details */
+.qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    background: #f8fafc;
+    padding: 1.8rem;
+    border-radius: 16px;
+    border: 1.5px dashed #cbd5e1;
+    text-align: center;
+    margin-top: 1.5rem;
+}
+.qr-frame {
+    background: white;
+    padding: 14px;
+    border-radius: 14px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.qr-image {
+    width: 240px;
+    height: 240px;
+    object-fit: contain;
+    border-radius: 6px;
+    display: block;
+}
+.qr-instruction {
+    margin: 0;
+    font-size: 0.92rem;
+    color: #475569;
+    font-weight: 500;
+    text-align: center;
+}
+.qr-detail-box {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px 20px;
+    text-align: left;
+    font-size: 0.9rem;
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.04);
+}
+.qr-detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #f1f5f9;
+    padding-bottom: 8px;
+}
+.qr-detail-row:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.qr-detail-row .lbl {
+    color: #64748b;
+    font-size: 0.85rem;
+}
+.qr-detail-row .val {
+    color: #0f172a;
+    font-weight: 700;
+}
+.qr-val-with-action {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.qr-detail-row .val-stk {
+    color: #0d9488;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+}
+.qr-detail-row .val-amount {
+    color: #dc2626;
+    font-size: 1.1rem;
+    font-weight: 800;
+}
+.qr-detail-row .val-noidung {
+    color: #2563eb;
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+}
+.qr-copy-btn {
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #64748b;
+    border-radius: 8px;
+    width: 32px;
+    height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    padding: 0;
+    flex-shrink: 0;
+}
+.qr-copy-btn:hover {
+    background: #f1f5f9;
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+.qr-copy-btn.copied {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+    color: #10b981;
+}
+
+/* Submit & Status Cards */
+.btn-submit {
+    width: 100%;
+    max-width: 360px;
+    padding: 0.85rem 1.6rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+    transition: all 0.2s;
+}
+.btn-submit:hover {
+    background: var(--primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(13, 148, 136, 0.35);
+}
+.payment-expired-card {
+    background: #fef2f2;
+    border: 1.5px solid #ef4444;
+    border-radius: 14px;
+    padding: 2rem;
+    text-align: center;
+    color: #991b1b;
+    margin-top: 1.5rem;
+}
+.payment-expired-card h3 {
+    margin-top: 0;
+    color: #991b1b;
+    font-size: 1.25rem;
+    font-weight: 800;
+}
+.payment-expired-card p {
+    color: #64748b;
+    margin-bottom: 1.5rem;
+}
+.payment-success-card {
+    background: #f0fdf4;
+    border: 2px solid #86efac;
+    border-radius: 16px;
+    padding: 2.5rem 2rem;
+    text-align: center;
+    margin-top: 1.5rem;
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.1);
+}
+.payment-success-card h3 {
+    color: #166534;
+    margin: 0 0 10px 0;
+    font-size: 1.4rem;
+    font-weight: 800;
+}
+.payment-success-card p {
+    color: #475569;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+}
+.btn-action-primary {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.btn-action-primary:hover {
+    background: var(--primary-hover);
+}
+.btn-action-outline {
+    background: #f1f5f9;
+    color: #334155;
+    border: 1px solid #cbd5e1;
+    padding: 10px 24px;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s;
+}
+.btn-action-outline:hover {
+    background: #e2e8f0;
+}

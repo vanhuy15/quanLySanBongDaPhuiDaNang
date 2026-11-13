@@ -1,0 +1,8 @@
+# Ngăn chặn thực thi script và mã lệnh trong thư mục tải lên hình ảnh
+<FilesMatch "\.(php|phtml|php3|php4|php5|php7|phps|cgi|pl|sh|exe|asp|aspx|jsp)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+Options -ExecCGI
+

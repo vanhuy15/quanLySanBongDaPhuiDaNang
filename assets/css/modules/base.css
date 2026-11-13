@@ -1,0 +1,100 @@
+/* ==========================================================================
+   USER-FACING BASE STYLES & VARIABLES (base.css)
+   ========================================================================== */
+
+:root {
+    --primary-color: #0d9488;
+    --primary-hover: #0f766e;
+    --secondary-color: #0284c7;
+    --bg-color: #f4f7f6; /* Lighter grayish green background */
+    --text-main: #1f2937;
+    --text-muted: #4b5563;
+    --border-color: #e5e7eb;
+    --card-bg: #ffffff;
+    --border-radius: 12px;
+    --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    --transition: all 0.2s ease-in-out;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+/* =====================================================
+   GLOBAL CURSOR FIX — xóa I-beam (|) trên toàn site
+   ===================================================== */
+
+/* 1. Tắt I-beam & text selection trên toàn bộ non-input elements */
+*:not(input):not(textarea):not([contenteditable="true"]) {
+    user-select: none;
+}
+
+/* 2. Mặc định cursor là default (mũi tên) cho mọi element */
+*, *::before, *::after {
+    cursor: default;
+}
+
+/* 3. Chỉ input thực sự cần gõ mới dùng text cursor */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="search"],
+input[type="tel"],
+input[type="url"],
+input[type="date"],
+input[type="time"],
+textarea,
+[contenteditable="true"] {
+    cursor: text;
+    user-select: text;
+}
+
+/* 4. Pointer cho tất cả element tương tác */
+a,
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+input[type="checkbox"],
+input[type="radio"],
+select,
+label,
+[role="button"],
+[onclick],
+a *,
+button *,
+[role="button"] *,
+[onclick] * {
+    cursor: pointer;
+}
+
+/* 5. Disabled element dùng not-allowed */
+[disabled],
+button[disabled],
+input[disabled] {
+    cursor: not-allowed !important;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--primary-hover);
+}
+

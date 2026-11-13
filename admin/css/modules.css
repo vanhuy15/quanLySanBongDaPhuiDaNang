@@ -1,0 +1,237 @@
+/* ==========================================================================
+   ADMIN SPECIFIC MODULES (modules.css)
+   Sân bóng pitch cards, Khung giờ slots, and Reviews detail analytics
+   ========================================================================== */
+
+/* 1. PITCH CARDS GRID (QUẢN LÝ SÂN BÓNG) */
+.pitch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-bottom: 30px;
+}
+
+.pitch-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+}
+
+.pitch-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-hover);
+}
+
+.pitch-card-img-wrap {
+    position: relative;
+    height: 180px;
+    background: #e2e8f0;
+}
+
+.pitch-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.pitch-type-tag {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(4px);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+}
+
+.pitch-card-body {
+    padding: 18px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.pitch-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.pitch-name {
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--text-heading);
+}
+
+.pitch-desc {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.pitch-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border-light);
+    padding-top: 14px;
+    margin-top: auto;
+}
+
+.pitch-sub-badge {
+    font-size: 0.8rem;
+    color: #475569;
+    background: #f1f5f9;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+/* 2. REVIEWS DETAIL MODULE (QUẢN LÝ ĐÁNH GIÁ) */
+.dg-header { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    flex-wrap: wrap; 
+    gap: 1rem; 
+    margin-bottom: 1.5rem; 
+}
+.dg-header h2 { 
+    margin: 0; 
+}
+
+.overview-grid { 
+    display: grid; 
+    grid-template-columns: 180px 1fr; 
+    gap: 2rem; 
+    align-items: center; 
+    background: white; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 12px; 
+    padding: 1.5rem; 
+    margin-bottom: 1.5rem; 
+}
+
+.big-num { 
+    font-size: 3rem; 
+    font-weight: 900; 
+    color: #1e293b; 
+    text-align: center; 
+}
+
+.big-stars { 
+    color: #f59e0b; 
+    font-size: 1.3rem; 
+    text-align: center; 
+}
+
+.big-lbl { 
+    font-size: 0.85rem; 
+    color: #64748b; 
+    text-align: center; 
+}
+
+.bar-rows { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 7px; 
+}
+
+.bar-row { 
+    display: flex; 
+    align-items: center; 
+    gap: 10px; 
+    font-size: 0.85rem; 
+}
+
+.bar-row .lbl { 
+    width: 36px; 
+    text-align: right; 
+    flex-shrink: 0; 
+    color: #64748b; 
+}
+
+.bar-row .lbl i { 
+    color: #f59e0b; 
+}
+
+.bar-bg { 
+    flex: 1; 
+    height: 9px; 
+    background: #e5e7eb; 
+    border-radius: 99px; 
+    overflow: hidden; 
+}
+
+.bar-fill { 
+    height: 100%; 
+    background: #f59e0b; 
+    border-radius: 99px; 
+}
+
+.bar-cnt { 
+    width: 28px; 
+    font-weight: 700; 
+    color: #1e293b; 
+    font-size: 0.85rem; 
+}
+
+.rv-table { 
+    width: 100%; 
+    border-collapse: separate; 
+    border-spacing: 0; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 12px; 
+    overflow: hidden; 
+}
+
+.rv-table th { 
+    background: #f8fafc; 
+    color: #475569; 
+    font-size: 0.82rem; 
+    font-weight: 600; 
+    padding: 0.9rem 1rem; 
+    text-align: left; 
+    border-bottom: 2px solid #e2e8f0; 
+}
+
+.rv-table td { 
+    padding: 0.9rem 1rem; 
+    border-bottom: 1px solid #f3f4f6; 
+    font-size: 0.88rem; 
+    vertical-align: middle; 
+}
+
+.rv-table tr:last-child td { 
+    border-bottom: none; 
+}
+
+.rv-table tr:hover td { 
+    background: #fafafa; 
+}
+
+.stars-row { 
+    color: #f59e0b; 
+    font-size: 0.82rem; 
+    white-space: nowrap; 
+}
+
+.rv-text { 
+    max-width: 300px; 
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    color: #4b5563; 
+}
+

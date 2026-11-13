@@ -1,0 +1,96 @@
+/* ==========================================================================
+   USER-FACING UTILITIES & ALERTS (utilities.css)
+   ========================================================================== */
+
+/* Alerts & Notices */
+.error { 
+    color: #dc2626; 
+    background: #fee2e2; 
+    padding: 1rem; 
+    border-radius: 8px; 
+    margin-bottom: 1rem; 
+    border: 1px solid #fecaca; 
+}
+
+.success-box { 
+    color: #16a34a; 
+    background: #dcfce7; 
+    padding: 1rem; 
+    border-radius: 8px; 
+    margin-bottom: 1rem; 
+    border: 1px solid #bbf7d0; 
+}
+
+/* Pagination */
+.pagination { 
+    display: flex; 
+    justify-content: center; 
+    gap: 0.5rem; 
+    margin-top: 1rem; 
+    margin-bottom: 3rem; 
+}
+
+.pagination a { 
+    padding: 0.5rem 1rem; 
+    background: white; 
+    border: 1px solid var(--border-color); 
+    border-radius: 8px; 
+    font-weight: 600; 
+    color: var(--text-muted); 
+    transition: all 0.2s; 
+}
+
+.pagination a.active { 
+    background: var(--primary-color); 
+    color: white; 
+    border-color: var(--primary-color); 
+}
+
+.pagination a:hover:not(.active) { 
+    background: #f1f5f9; 
+}
+
+/* Filter Pills */
+.filter-pill { 
+    background: #f3f4f6; 
+    border: 1px solid transparent; 
+    color: #4b5563; 
+    padding: 6px 16px; 
+    border-radius: 50px; 
+    font-size: 0.85rem; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: all 0.2s ease; 
+}
+
+.filter-pill:hover { 
+    background: #e5e7eb; 
+    color: #1f2937; 
+}
+
+.filter-pill.active { 
+    background: #0f766e !important; 
+    color: white !important; 
+}
+
+/* Empty States */
+.pitch-empty-state {
+    text-align: center; 
+    width: 100%; 
+    padding: 4rem 1rem; 
+    color: #9ca3af; 
+    grid-column: 1 / -1;
+}
+
+.pitch-empty-title {
+    font-size: 1.15rem; 
+    font-weight: 600; 
+    color: #475569; 
+    margin-bottom: 0.5rem;
+}
+
+.pitch-empty-subtitle {
+    font-size: 0.9rem; 
+    color: #94a3b8;
+}
+

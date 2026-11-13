@@ -1,0 +1,200 @@
+/* ==========================================================================
+   USER-FACING PITCH CARDS MODULE (cards.css)
+   ========================================================================== */
+
+.san-bong-container {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+}
+
+@media (max-width: 1100px) { .san-bong-container { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 800px) { .san-bong-container { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .san-bong-container { grid-template-columns: 1fr; } }
+
+.san-card {
+    background: var(--card-bg);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    transition: var(--transition);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.san-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 25px rgba(0, 0, 0, 0.08);
+}
+
+.san-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
+
+.san-card h2 {
+    font-size: 1.05rem;
+    font-weight: 700;
+    padding: 0;
+    margin: 0 0 0.5rem 0;
+    color: #1e293b;
+    line-height: 1.4;
+    text-align: center;
+    display: block;
+}
+
+.address-container {
+    padding: 0.25rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+}
+
+.address-line {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    text-align: left;
+    gap: 0.5rem;
+    line-height: 1.4;
+    flex: 1;
+    padding-right: 0.5rem;
+}
+
+.btn-map-small {
+    background: #f8fafc;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e2e8f0;
+    color: #4b5563;
+    transition: all 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-map-small:hover {
+    transform: translateY(-2px);
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.card-actions {
+    padding: 0.75rem 1.25rem;
+    background-color: #ffffff;
+    text-align: center;
+    border-top: 1px solid #f1f5f9;
+}
+
+.btn-datsan {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: #0d9488;
+    color: white;
+    padding: 0.65rem 1.75rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.25s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-datsan:hover {
+    background: #0f766e;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 148, 136, 0.25);
+}
+
+/* Pitch Card Enhancements */
+.pitch-badge-type {
+    position: absolute; 
+    top: 12px; 
+    left: 12px;
+    background: rgba(15, 118, 110, 0.92); 
+    color: white;
+    padding: 4px 10px; 
+    border-radius: 6px;
+    font-size: 0.75rem; 
+    font-weight: 600;
+}
+
+.pitch-badge-subs {
+    position: absolute; 
+    top: 12px; 
+    right: 12px;
+    background: rgba(15, 23, 42, 0.75); 
+    color: white;
+    padding: 4px 10px; 
+    border-radius: 6px;
+    font-size: 0.75rem; 
+    font-weight: 600;
+}
+
+.pitch-card-body {
+    padding: 1rem; 
+    display: flex; 
+    flex-direction: column; 
+    flex: 1; 
+    text-align: left;
+}
+
+.pitch-card-title {
+    margin-bottom: 0.5rem; 
+    font-size: 1.2rem; 
+    font-weight: 700; 
+    color: #1e293b;
+    transition: color 0.2s;
+}
+
+.pitch-card-title:hover {
+    color: var(--primary-color);
+}
+
+.pitch-card-rating-price {
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 0.5rem;
+}
+
+.pitch-rating-badge {
+    color: #f59e0b; 
+    font-weight: 600; 
+    font-size: 0.85rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 4px;
+}
+
+.pitch-review-count {
+    color: #9ca3af; 
+    font-weight: 400;
+}
+
+.pitch-no-rating {
+    color: #9ca3af; 
+    font-size: 0.85rem;
+}
+
+.pitch-price-tag {
+    font-weight: 700; 
+    color: var(--primary-color); 
+    font-size: 0.95rem;
+}
+

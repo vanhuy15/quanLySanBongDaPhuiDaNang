@@ -12,7 +12,7 @@
     "test:e2e:headed": "npx playwright test --headed",
     "test:report": "npx playwright show-report tester/03_e2e_ui_test/playwright-report",
     "test:security": "\"D:\\XAMPP\\php\\php.exe\" tester/05_security_test/security_audit_runner.php",
-    "test:all": "npm run test:unit && npm run test:security && npm run test:e2e"
+    "test:all": "npm run test:unit && npm run test:api && npm run test:security && npm run test:e2e"
   },
   "keywords": [
     "php",

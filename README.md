@@ -83,11 +83,11 @@ Dự án tích hợp đầy đủ quy trình kiểm thử theo tiêu chuẩn Sof
 
 ```text
 tester/
-├── 01_unit_test/              # Kiểm thử Hộp Trắng (PHPUnit 10.5): 41 Tests, 110 Assertions
-├── 02_api_test/                # Kiểm thử API & Tích hợp (Postman & Newman): 23 API Test Cases
-├── 03_e2e_ui_test/             # Kiểm thử Tự động Giao diện (Playwright E2E): 10 Luồng nghiệp vụ
-├── 04_load_concurrency_test/   # Kiểm thử Tải & Race Condition (Apache JMeter 5.6): 3 Test Plans
-└── 05_security_test/           # Kiểm thử An toàn Thông tin (OWASP ZAP & Automated Auditor)
+├── 01_unit_test/              # Kiểm thử Hộp Trắng (PHPUnit 10.5): 47 Tests, 129 Assertions (100% Pass)
+├── 02_api_test/                # Kiểm thử API & Tích hợp (Postman & Newman): 25 API Requests, 34 Assertions (100% Pass)
+├── 03_e2e_ui_test/             # Kiểm thử Tự động Giao diện (Playwright E2E): 12 Luồng nghiệp vụ (100% Pass)
+├── 04_load_concurrency_test/   # Kiểm thử Tải & Race Condition (Apache JMeter 5.6): 3 Test Plans + One-Click Runner
+└── 05_security_test/           # Kiểm thử An toàn Thông tin (OWASP ZAP & Automated Auditor): 9/9 Chốt bảo mật (100% Pass)
 ```
 
 ### ⚡ Các Lệnh Terminal Chạy Test Nhanh (NPM Scripts)

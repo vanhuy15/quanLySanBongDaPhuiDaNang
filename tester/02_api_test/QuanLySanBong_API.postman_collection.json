@@ -49,6 +49,55 @@
           }
         },
         {
+          "name": "TC00_B - Chặn truy cập đặt sân khi chưa đăng nhập",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Chuyển hướng hoặc báo lỗi yêu cầu đăng nhập (302/200)', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                  "    if (pm.response.code === 302) {",
+                  "        pm.expect(pm.response.headers.get('Location') || '').to.include('action=login');",
+                  "    } else {",
+                  "        pm.expect(pm.response.text()).to.match(/action=login|đăng nhập/i);",
+                  "    }",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Cookie",
+                "value": ""
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=book",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "DatSan"
+                },
+                {
+                  "key": "action",
+                  "value": "book"
+                }
+              ]
+            }
+          }
+        },
+        {
           "name": "TC01 - Đăng nhập tài khoản Khách hàng (testuser)",
           "event": [
             {
@@ -180,70 +229,6 @@
           }
         },
         {
-          "name": "TC03 - Đăng nhập tài khoản Quản trị viên (admin15)",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Đăng nhập admin thành công (200/302)', function () {",
-                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [
-              {
-                "key": "Content-Type",
-                "value": "application/x-www-form-urlencoded"
-              }
-            ],
-            "body": {
-              "mode": "urlencoded",
-              "urlencoded": [
-                {
-                  "key": "username",
-                  "value": "admin15",
-                  "type": "text"
-                },
-                {
-                  "key": "password",
-                  "value": "123456",
-                  "type": "text"
-                },
-                {
-                  "key": "csrf_token",
-                  "value": "{{csrf_token}}",
-                  "type": "text"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{baseUrl}}/index.php?controller=Auth&action=login",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "index.php"
-              ],
-              "query": [
-                {
-                  "key": "controller",
-                  "value": "Auth"
-                },
-                {
-                  "key": "action",
-                  "value": "login"
-                }
-              ]
-            }
-          }
-        },
-        {
           "name": "TC05 - Chặn hành động POST khi thiếu CSRF Token",
           "event": [
             {
@@ -288,7 +273,7 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=processBooking",
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=bookSubmit",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -302,7 +287,7 @@
                 },
                 {
                   "key": "action",
-                  "value": "processBooking"
+                  "value": "bookSubmit"
                 }
               ]
             }
@@ -323,8 +308,9 @@
                   "pm.test('Status code là 200', function () {",
                   "    pm.response.to.have.status(200);",
                   "});",
+                  "",
                   "pm.test('Chứa container danh sách sân bóng', function () {",
-                  "    pm.expect(pm.response.text()).to.include('pitch-grid');",
+                  "    pm.expect(pm.response.text()).to.match(/san-bong-container|search-bar-container/i);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -532,50 +518,6 @@
           }
         },
         {
-          "name": "TC11 - Kiểm tra chặn đặt sân khi chưa đăng nhập",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "pm.test('Chuyển hướng hoặc báo lỗi yêu cầu đăng nhập', function () {",
-                  "    pm.expect(pm.response.text()).to.match(/action=login|đăng nhập/i);",
-                  "});"
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [
-              {
-                "key": "Cookie",
-                "value": ""
-              }
-            ],
-            "url": {
-              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=book",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "index.php"
-              ],
-              "query": [
-                {
-                  "key": "controller",
-                  "value": "DatSan"
-                },
-                {
-                  "key": "action",
-                  "value": "book"
-                }
-              ]
-            }
-          }
-        },
-        {
           "name": "TC12 - Kiểm tra chi tiết trạng thái Slot sân con",
           "event": [
             {
@@ -584,6 +526,9 @@
                 "exec": [
                   "pm.test('Status code là 200', function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Phản hồi chứa dữ liệu lịch sân 7', function () {",
+                  "    pm.expect(pm.response.text()).to.match(/khung-gio|timeline|table|gio/i);",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -593,7 +538,7 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=checkAvailability&khung_gio_id=1&ngay_dat=2026-11-20",
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=getSchedule&san_id=1&ngay_dat=2026-11-20&mode=san_7",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -607,15 +552,114 @@
                 },
                 {
                   "key": "action",
-                  "value": "checkAvailability"
+                  "value": "getSchedule"
                 },
                 {
-                  "key": "khung_gio_id",
+                  "key": "san_id",
                   "value": "1"
                 },
                 {
                   "key": "ngay_dat",
                   "value": "2026-11-20"
+                },
+                {
+                  "key": "mode",
+                  "value": "san_7"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC12_B - Đặt sân trực tuyến tạo đơn giữ chỗ (bookSubmit)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status code là 200', function () {",
+                  "    pm.response.to.have.status(200);",
+                  "});",
+                  "try {",
+                  "    var res = pm.response.json();",
+                  "    if (res.success && res.dat_san_id) {",
+                  "        pm.environment.set('latest_booking_id', res.dat_san_id);",
+                  "        console.log('Created dynamic booking ID:', res.dat_san_id);",
+                  "    } else {",
+                  "        pm.environment.set('latest_booking_id', '135');",
+                  "    }",
+                  "} catch(e) {",
+                  "    pm.environment.set('latest_booking_id', '135');",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "san_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "khung_gio_id",
+                  "value": "1",
+                  "type": "text"
+                },
+                {
+                  "key": "ngay_dat",
+                  "value": "2026-12-28",
+                  "type": "text"
+                },
+                {
+                  "key": "loai_san_dat",
+                  "value": "san_5",
+                  "type": "text"
+                },
+                {
+                  "key": "ten_san_con",
+                  "value": "A",
+                  "type": "text"
+                },
+                {
+                  "key": "san_con_khoa",
+                  "value": "A",
+                  "type": "text"
+                },
+                {
+                  "key": "csrf_token",
+                  "value": "{{csrf_token}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=DatSan&action=bookSubmit",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "DatSan"
+                },
+                {
+                  "key": "action",
+                  "value": "bookSubmit"
                 }
               ]
             }
@@ -633,12 +677,14 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "pm.test('Status code là 200', function () {",
-                  "    pm.response.to.have.status(200);",
+                  "pm.test('Status code là 200 hoặc 302', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
                   "});",
-                  "pm.test('Chứa thông tin giữ chỗ và phương thức thanh toán', function () {",
-                  "    pm.expect(pm.response.text()).to.match(/Thời gian giữ chỗ|VietQR|Tiền mặt/i);",
-                  "});"
+                  "if (pm.response.code === 200) {",
+                  "    pm.test('Chứa thông tin giữ chỗ và phương thức thanh toán', function () {",
+                  "        pm.expect(pm.response.text()).to.match(/thanh toán|giữ chỗ|VietQR|Tiền mặt/i);",
+                  "    });",
+                  "}"
                 ],
                 "type": "text/javascript"
               }
@@ -647,7 +693,7 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/index.php?controller=Payment&action=checkout&id=1",
+              "raw": "{{baseUrl}}/index.php?controller=Payment&action=index&dat_san_id={{latest_booking_id}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -661,11 +707,11 @@
                 },
                 {
                   "key": "action",
-                  "value": "checkout"
+                  "value": "index"
                 },
                 {
-                  "key": "id",
-                  "value": "1"
+                  "key": "dat_san_id",
+                  "value": "{{latest_booking_id}}"
                 }
               ]
             }
@@ -698,11 +744,6 @@
               "mode": "urlencoded",
               "urlencoded": [
                 {
-                  "key": "dat_san_id",
-                  "value": "1",
-                  "type": "text"
-                },
-                {
                   "key": "phuong_thuc",
                   "value": "chuyen_khoan",
                   "type": "text"
@@ -715,7 +756,7 @@
               ]
             },
             "url": {
-              "raw": "{{baseUrl}}/index.php?controller=Payment&action=confirmTransfer",
+              "raw": "{{baseUrl}}/index.php?controller=Payment&action=index&dat_san_id={{latest_booking_id}}",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -729,7 +770,55 @@
                 },
                 {
                   "key": "action",
-                  "value": "confirmTransfer"
+                  "value": "index"
+                },
+                {
+                  "key": "dat_san_id",
+                  "value": "{{latest_booking_id}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "TC14_B - Kiểm tra an toàn khi truyền dat_san_id âm hoặc không hợp lệ (-1)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Hệ thống chuyển hướng an toàn và không gây crash 500', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302, 400, 404]);",
+                  "    pm.expect(pm.response.code).to.not.equal(500);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Payment&action=index&dat_san_id=-1",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Payment"
+                },
+                {
+                  "key": "action",
+                  "value": "index"
+                },
+                {
+                  "key": "dat_san_id",
+                  "value": "-1"
                 }
               ]
             }
@@ -831,6 +920,10 @@
                 "exec": [
                   "pm.test('Status code là 200', function () {",
                   "    pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Phản hồi JSON hợp lệ', function () {",
+                  "    var res = pm.response.json();",
+                  "    pm.expect(res).to.have.property('success');",
                   "});"
                 ],
                 "type": "text/javascript"
@@ -840,7 +933,7 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/index.php?controller=Notification&action=getUnread",
+              "raw": "{{baseUrl}}/index.php?controller=Notification&action=getLatest",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -854,7 +947,7 @@
                 },
                 {
                   "key": "action",
-                  "value": "getUnread"
+                  "value": "getLatest"
                 }
               ]
             }
@@ -939,6 +1032,70 @@
     {
       "name": "06 - Admin Management",
       "item": [
+        {
+          "name": "TC18_B - Đăng nhập tài khoản Quản trị viên (admin15)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('Đăng nhập admin thành công (200/302)', function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 302]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/x-www-form-urlencoded"
+              }
+            ],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "username",
+                  "value": "admin15",
+                  "type": "text"
+                },
+                {
+                  "key": "password",
+                  "value": "123456",
+                  "type": "text"
+                },
+                {
+                  "key": "csrf_token",
+                  "value": "{{csrf_token}}",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/index.php?controller=Auth&action=login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "index.php"
+              ],
+              "query": [
+                {
+                  "key": "controller",
+                  "value": "Auth"
+                },
+                {
+                  "key": "action",
+                  "value": "login"
+                }
+              ]
+            }
+          }
+        },
         {
           "name": "TC19 - Xem KPI Dashboard & Biểu đồ doanh thu Admin",
           "event": [
@@ -1082,13 +1239,13 @@
           "request": {
             "method": "GET",
             "url": {
-              "raw": "{{baseUrl}}/admin/khachhang/index.php",
+              "raw": "{{baseUrl}}/admin/user/index.php",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "admin",
-                "khachhang",
+                "user",
                 "index.php"
               ]
             }

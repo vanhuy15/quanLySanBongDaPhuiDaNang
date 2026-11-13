@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<configuration>
+    <context>
+        <name>QuanLySanBong</name>
+        <desc>Bối cảnh kiểm thử bảo mật DAST hệ thống Quản lý Sân bóng đá mini Đà Nẵng</desc>
+        <inscope>true</inscope>
+        <incregexes>http://localhost/quanlysanbong.*</incregexes>
+        <excregexes>http://localhost/quanlysanbong/.*logout.*</excregexes>
+        <excregexes>http://localhost/quanlysanbong/admin/logout\.php.*</excregexes>
+        <tech>
+            <include>Language.PHP</include>
+            <include>Db.MySQL</include>
+            <include>OS.Windows</include>
+            <include>WS.Apache</include>
+        </tech>
+        <authentication>
+            <type>2</type>
+            <strategy>EACH_RESP</strategy>
+            <form>
+                <loginurl>http://localhost/quanlysanbong/index.php?controller=Auth&amp;action=login</loginurl>
+                <loginbody>username={%username%}&amp;password={%password%}&amp;csrf_token={%csrf_token%}</loginbody>
+                <loginpageurl>http://localhost/quanlysanbong/index.php?controller=Auth&amp;action=login</loginpageurl>
+            </form>
+        </authentication>
+        <session>
+            <type>0</type>
+        </session>
+    </context>
+</configuration>

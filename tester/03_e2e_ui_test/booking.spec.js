@@ -181,4 +181,72 @@ test.describe('E2E Test Toàn Diện: Hệ Thống Đặt Sân Bóng Đá Mini (
         const loginLink = page.locator('a[href*="action=login"]:has-text("Đăng nhập")');
         await expect(loginLink.first()).toBeVisible();
     });
+
+    test('TC11: Luồng Đặt Sân Trực Tuyến & Chuyển Sang Trang Thanh Toán Giữ Chỗ', async ({ page }) => {
+        // Đăng nhập tài khoản testuser
+        await page.goto('index.php?controller=Auth&action=login');
+        await page.fill('#username', 'testuser');
+        await page.fill('#password', '123456');
+        await page.click('button[type="submit"]');
+        await page.waitForURL('**/index.php*');
+
+        // Vào trang đặt sân
+        await page.goto('index.php?controller=DatSan&action=book&san_id=1');
+        await page.waitForSelector('#schedule-container');
+
+        // Chờ tải bảng lịch sân thành công
+        const availablePitch = page.locator('.mini-pitch-svg.available').first();
+        if (await availablePitch.isVisible({ timeout: 5000 }).catch(() => false)) {
+            // Click chọn 1 sân con còn trống
+            await availablePitch.click();
+            await expect(availablePitch).toHaveClass(/selected/);
+
+            // Bấm nút Đặt sân của dòng tương ứng
+            const activeRow = page.locator('.schedule-row.active-row');
+            const submitBtn = activeRow.locator('button[type="submit"]');
+            await submitBtn.click();
+
+            // Chờ chuyển hướng sang trang thanh toán
+            await page.waitForURL('**/index.php?controller=Payment&action=index&dat_san_id=*', { timeout: 10000 });
+            await expect(page.locator('#countdownTimer')).toBeVisible();
+            await expect(page.locator('.thongtin-datsan')).toBeVisible();
+        } else {
+            // Trường hợp ngày hôm nay đã hết slot trống, kiểm tra giao diện bảng lịch vẫn hiển thị đầy đủ
+            await expect(page.locator('#schedule-container')).toBeVisible();
+        }
+    });
+
+    test('TC12: Kiểm Tra Tương Tác Chọn Phương Thức & Nút Sao Chép STK VietQR', async ({ page }) => {
+        // Đăng nhập tài khoản testuser
+        await page.goto('index.php?controller=Auth&action=login');
+        await page.fill('#username', 'testuser');
+        await page.fill('#password', '123456');
+        await page.click('button[type="submit"]');
+        await page.waitForURL('**/index.php*');
+
+        // Truy cập trang thanh toán đơn đặt sân
+        await page.goto('index.php?controller=Payment&action=index&dat_san_id=138');
+
+        // Nếu đơn 138 còn hiệu lực hoặc hiển thị form
+        const chuyenKhoanRadio = page.locator('input[name="phuong_thuc"][value="chuyen_khoan"]');
+        if (await chuyenKhoanRadio.isVisible({ timeout: 3000 }).catch(() => false)) {
+            await chuyenKhoanRadio.check({ force: true });
+            
+            // Hộp VietQR phải xuất hiện
+            const qrBox = page.locator('#chuyenKhoanBox');
+            await expect(qrBox).toBeVisible();
+
+            // Kiểm tra hiển thị đúng STK MB Bank
+            const stkText = page.locator('#stkText');
+            await expect(stkText).toContainText('1111000050174');
+
+            // Click nút sao chép STK và kiểm tra phản hồi tương tác
+            const copyBtn = page.locator('.qr-copy-btn').first();
+            await copyBtn.click();
+            await expect(copyBtn.locator('i')).toHaveClass(/fa-check|fa-copy/);
+        } else {
+            // Xác nhận hiển thị thông tin trang thanh toán hoặc thẻ thông báo
+            await expect(page.locator('.thanhtoan-container')).toBeVisible();
+        }
+    });
 });

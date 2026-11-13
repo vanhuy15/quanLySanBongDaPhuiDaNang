@@ -40,6 +40,11 @@ class AuthController extends Controller {
             }
 
             $user = User::findByUsername($username);
+
+            // Kiểm tra khớp tuyệt đối từng ký tự chữ thường / chữ hoa
+            if ($user && $user['ten_dang_nhap'] !== $username) {
+                $user = null;
+            }
             
             if ($user) {
                 if ($user['trang_thai'] === 'banned') {

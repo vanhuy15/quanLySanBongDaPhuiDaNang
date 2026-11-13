@@ -22,9 +22,10 @@ class DatSanController extends Controller {
         if ($san_id_xem == 0 && count($san_bongs) > 0) {
             $san_id_xem = $san_bongs[0]['san_id'];
         }
+        $min_allowed = max('2025-01-01', date('Y-m-d'));
         $ngay_dat_xem = isset($_GET['ngay_dat']) ? $_GET['ngay_dat'] : date('Y-m-d');
-        if ($ngay_dat_xem < '2025-01-01') {
-            $ngay_dat_xem = '2025-01-01';
+        if ($ngay_dat_xem < $min_allowed) {
+            $ngay_dat_xem = $min_allowed;
         }
 
         $this->render('datsan/book', [
@@ -37,9 +38,10 @@ class DatSanController extends Controller {
     public function getSchedule() {
         // AJAX endpoint returning HTML
         $san_id = intval($_GET['san_id'] ?? 0);
+        $min_allowed = max('2025-01-01', date('Y-m-d'));
         $ngay_dat = $_GET['ngay_dat'] ?? date('Y-m-d');
-        if ($ngay_dat < '2025-01-01') {
-            $ngay_dat = '2025-01-01';
+        if ($ngay_dat < $min_allowed) {
+            $ngay_dat = $min_allowed;
         }
         $view_mode = $_GET['mode'] ?? 'san_5'; // 'san_5' or 'san_7'
         
@@ -132,8 +134,32 @@ class DatSanController extends Controller {
             return;
         }
 
-        if (empty($ngay_dat) || $ngay_dat < '2025-01-01') {
-            $this->jsonResponse(['success' => false, 'message' => 'Lỗi: Ngày đặt sân không hợp lệ (hệ thống chỉ áp dụng từ năm 2025 trở đi).']);
+        $min_allowed = max('2025-01-01', date('Y-m-d'));
+        if (empty($ngay_dat) || $ngay_dat < $min_allowed) {
+            $this->jsonResponse(['success' => false, 'message' => 'Lỗi: Ngày đặt sân không hợp lệ hoặc đã trôi qua.']);
+            return;
+        }
+
+        // Kiểm tra khung giờ và khoảng đệm 5 phút
+        $conn = Database::getConnection();
+        $kg_check = $conn->prepare("SELECT gio_bat_dau FROM khung_gio WHERE khung_gio_id = ?");
+        $kg_check->bind_param("i", $khung_gio_id);
+        $kg_check->execute();
+        $kg_info = $kg_check->get_result()->fetch_assoc();
+        $kg_check->close();
+
+        if (!$kg_info) {
+            $this->jsonResponse(['success' => false, 'message' => 'Lỗi: Khung giờ không tồn tại!']);
+            return;
+        }
+
+        $slot_start_time = strtotime($ngay_dat . ' ' . $kg_info['gio_bat_dau']);
+        $buffer_seconds = 5 * 60; // 5 phút khoảng đệm chuẩn bị sân
+        if ($slot_start_time <= (time() + $buffer_seconds)) {
+            $this->jsonResponse([
+                'success' => false, 
+                'message' => 'Khung giờ này đã trôi qua hoặc quá sát giờ thi đấu (dưới 5 phút). Vui lòng chọn khung giờ khác!'
+            ]);
             return;
         }
 

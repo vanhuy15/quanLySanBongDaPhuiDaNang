@@ -326,8 +326,13 @@ class UserController extends Controller {
             $this->jsonResponse(['success' => false, 'message' => 'Đơn đặt sân này đã được hủy trước đó.']);
         }
 
+        if ($booking['trang_thai'] === 'Đã hoàn tiền') {
+            $this->jsonResponse(['success' => false, 'message' => 'Đơn đặt sân này đã được hoàn tiền xong.']);
+        }
+
         $match_start_time = strtotime($booking['ngay_dat'] . ' ' . $booking['gio_bat_dau']);
-        if ($match_start_time <= time()) {
+        // Chỉ chặn hủy đơn quá giờ với các đơn chưa hủy/chưa chuyển hoàn tiền
+        if ($booking['trang_thai'] !== 'Chờ hoàn tiền' && $match_start_time <= time()) {
             $this->jsonResponse(['success' => false, 'message' => 'Không thể hủy đơn đặt sân đã hoặc đang diễn ra!']);
         }
 
@@ -350,14 +355,14 @@ class UserController extends Controller {
         }
         // ---------------------------------------------------------------
 
-        // Kiểm tra phương thức thanh toán
+        // Kiểm tra phương thức thanh toán: Nếu khách đã chuyển khoản (dù đơn ở Đã xác nhận, Chờ xác nhận, hay Chờ hoàn tiền) thì đều xử lý nhận STK hoàn tiền
         $stmt_pay = $conn->prepare("SELECT phuong_thuc FROM thanh_toan WHERE dat_san_id = ?");
         $stmt_pay->bind_param("i", $dat_san_id);
         $stmt_pay->execute();
         $pay_info = $stmt_pay->get_result()->fetch_assoc();
         $stmt_pay->close();
 
-        $is_paid_transfer = ($booking['trang_thai'] === 'Đã xác nhận' && $pay_info && $pay_info['phuong_thuc'] === 'chuyen_khoan');
+        $is_paid_transfer = (in_array($booking['trang_thai'], ['Đã xác nhận', 'Chờ xác nhận', 'Chờ hoàn tiền']) && $pay_info && $pay_info['phuong_thuc'] === 'chuyen_khoan');
 
         if ($is_paid_transfer) {
             $ngan_hang = trim($_POST['ngan_hang'] ?? '');
@@ -399,7 +404,11 @@ class UserController extends Controller {
                     "index.php?controller=User&action=history"
                 );
 
-                $this->jsonResponse(['success' => true, 'message' => 'Yêu cầu hủy sân và hoàn tiền đã được gửi thành công! Quản trị viên sẽ chuyển hoàn về STK của bạn sớm nhất. Sân đã được mở lại.' . $penalty_msg]);
+                $msg = ($booking['trang_thai'] === 'Chờ hoàn tiền') 
+                    ? 'Thông tin nhận hoàn tiền đã được cập nhật thành công! Quản trị viên sẽ sớm chuyển khoản cho bạn.'
+                    : 'Yêu cầu hủy sân và hoàn tiền đã được gửi thành công! Quản trị viên sẽ chuyển hoàn về STK của bạn sớm nhất. Sân đã được mở lại.' . $penalty_msg;
+
+                $this->jsonResponse(['success' => true, 'message' => $msg]);
             } else {
                 $this->jsonResponse(['success' => false, 'message' => 'Lỗi khi gửi yêu cầu hoàn tiền.']);
             }

@@ -38,6 +38,11 @@ use Models\DatSan;
             // Lấy tất cả các sân con bị khóa trong khung giờ này qua Model
             $locked_sub_pitches = DatSan::getLockedSubPitches($kg['khung_gio_id'], $ngay_dat);
 
+            // Kiểm tra khung giờ đã qua hoặc quá sát giờ thi đấu (dưới 5 phút khoảng đệm)
+            $slot_start_time = strtotime($ngay_dat . ' ' . $kg['gio_bat_dau']);
+            $buffer_seconds = 5 * 60; // 5 phút đệm chuẩn bị sân
+            $is_slot_expired = ($slot_start_time <= (time() + $buffer_seconds));
+
             // Giá tiền theo chế độ
             if ($view_mode === 'san_7') {
                 $gia_hien_thi = !empty($kg['gia_tien_san_7']) ? $kg['gia_tien_san_7'] : ($kg['gia_tien'] * ($quy_tac_ghep > 0 ? $quy_tac_ghep : 1.6));
@@ -48,11 +53,24 @@ use Models\DatSan;
             // Tính số sân còn lại theo chế độ
             $has_available_slot = false;
         ?>
-            <tr class="schedule-row">
-                <td><strong><?php echo date("H:i", strtotime($kg['gio_bat_dau'])) . ' - ' . date("H:i", strtotime($kg['gio_ket_thuc'])); ?></strong></td>
+            <tr class="schedule-row <?php echo $is_slot_expired ? 'row-expired' : ''; ?>" style="<?php echo $is_slot_expired ? 'background: #f8fafc; opacity: 0.65;' : ''; ?>">
+                <td>
+                    <strong><?php echo date("H:i", strtotime($kg['gio_bat_dau'])) . ' - ' . date("H:i", strtotime($kg['gio_ket_thuc'])); ?></strong>
+                    <?php if ($is_slot_expired): ?>
+                        <div style="font-size: 0.75rem; color: #ef4444; font-weight: 600; margin-top: 3px;">
+                            <i class="fas fa-exclamation-circle"></i> Đã đóng
+                        </div>
+                    <?php endif; ?>
+                </td>
                 <td class="price-cell"><?php echo number_format($gia_hien_thi); ?> VND</td>
 
                 <td>
+                    <?php if ($is_slot_expired): ?>
+                        <div style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px; color: #64748b; font-weight: 600; font-size: 0.88rem; background: #f1f5f9; border-radius: 8px; border: 1px dashed #cbd5e1;">
+                            <i class="fas fa-clock" style="font-size: 1rem; color: #94a3b8;"></i>
+                            <span>Khung giờ đã trôi qua (hoặc dưới 5 phút)</span>
+                        </div>
+                    <?php else: ?>
                     <div class="mini-pitch-map" style="display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;">
                         <?php
                         if ($view_mode === 'san_5') {
@@ -98,18 +116,25 @@ use Models\DatSan;
                         }
                         ?>
                     </div>
+                    <?php endif; ?>
                 </td>
                 <td>
-                    <form onsubmit="submitBooking(event, this)" style="margin:0;">
-                        <input type="hidden" name="khung_gio_id" value="<?php echo $kg['khung_gio_id']; ?>">
-                        <input type="hidden" name="ngay_dat" value="<?php echo $ngay_dat; ?>">
-                        <input type="hidden" name="loai_san_dat" value="<?php echo $view_mode; ?>">
-                        <input type="hidden" name="ten_san_con" class="hidden-pitch-name" value="">
-                        <input type="hidden" name="san_con_khoa" class="hidden-lock-keys" value="">
-                        <button type="submit" class="btn-thanhtoan" <?php echo (!$has_available_slot) ? 'disabled' : ''; ?>>
-                            <?php echo (!$has_available_slot) ? 'Đã Hết' : 'Đặt Ngay'; ?>
+                    <?php if ($is_slot_expired): ?>
+                        <button type="button" class="btn-thanhtoan btn-expired" disabled style="background: #cbd5e1; color: #64748b; cursor: not-allowed; border: none; box-shadow: none;">
+                            <i class="fas fa-ban"></i> Đã Quá Giờ
                         </button>
-                    </form>
+                    <?php else: ?>
+                        <form onsubmit="submitBooking(event, this)" style="margin:0;">
+                            <input type="hidden" name="khung_gio_id" value="<?php echo $kg['khung_gio_id']; ?>">
+                            <input type="hidden" name="ngay_dat" value="<?php echo $ngay_dat; ?>">
+                            <input type="hidden" name="loai_san_dat" value="<?php echo $view_mode; ?>">
+                            <input type="hidden" name="ten_san_con" class="hidden-pitch-name" value="">
+                            <input type="hidden" name="san_con_khoa" class="hidden-lock-keys" value="">
+                            <button type="submit" class="btn-thanhtoan" <?php echo (!$has_available_slot) ? 'disabled' : ''; ?>>
+                                <?php echo (!$has_available_slot) ? 'Đã Hết' : 'Đặt Ngay'; ?>
+                            </button>
+                        </form>
+                    <?php endif; ?>
                 </td>
             </tr>
         <?php endwhile; ?>

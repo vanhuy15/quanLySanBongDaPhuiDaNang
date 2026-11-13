@@ -19,15 +19,21 @@ class User {
     }
 
     /**
-     * Tìm người dùng theo tên đăng nhập
+     * Tìm người dùng theo tên đăng nhập (Phân biệt chữ hoa / chữ thường chính xác - Case Sensitive)
      */
     public static function findByUsername($username) {
         $conn = Database::getConnection();
-        $stmt = $conn->prepare("SELECT * FROM nguoi_dung WHERE ten_dang_nhap = ?");
+        $stmt = $conn->prepare("SELECT * FROM nguoi_dung WHERE BINARY ten_dang_nhap = ?");
         $stmt->bind_param("s", $username);
         $stmt->execute();
         $res = $stmt->get_result()->fetch_assoc();
         $stmt->close();
+
+        // Kiểm tra hai tầng ở cấp PHP để đảm bảo tuyệt đối khớp chính xác từng ký tự
+        if ($res && $res['ten_dang_nhap'] !== $username) {
+            return null;
+        }
+
         return $res;
     }
 

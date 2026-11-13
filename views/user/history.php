@@ -86,7 +86,11 @@
                             if ($row['trang_thai'] == 'Chờ thanh toán') {
                                 echo '<span class="status-badge" style="background:#fff7ed; color:#ea580c; border:1px solid #fed7aa;">Chờ thanh toán</span>';
                             } elseif ($row['trang_thai'] == 'Chờ xác nhận') {
-                                echo '<span class="status-badge status-cho">Chờ duyệt</span>';
+                                if ($is_match_started) {
+                                    echo '<span class="status-badge" style="background:#fef2f2; color:#b91c1c; border:1px solid #fecaca;" title="Đã quá giờ thi đấu mà quản trị viên chưa duyệt">Quá hạn duyệt</span>';
+                                } else {
+                                    echo '<span class="status-badge status-cho">Chờ duyệt</span>';
+                                }
                             } elseif ($row['trang_thai'] == 'Đã xác nhận') {
                                 if ($is_match_finished) {
                                     echo '<span class="status-badge" style="background:#ecfdf5; color:#047857; border:1px solid #a7f3d0;">Hoàn thành</span>';
@@ -110,9 +114,15 @@
                                     Hủy
                                 </button>
                             <?php elseif ($row['trang_thai'] == 'Chờ xác nhận'): ?>
-                                <button type="button" onclick="cancelUserBooking(<?php echo $row['dat_san_id']; ?>)" class="btn-cancel-action" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" title="Hủy yêu cầu đặt sân">
-                                    Hủy đơn
-                                </button>
+                                <?php if ($row['phuong_thuc'] === 'chuyen_khoan'): ?>
+                                    <button type="button" onclick="openRefundModal(<?php echo $row['dat_san_id']; ?>, '<?php echo addslashes($row['ten_san']); ?>', <?php echo (int)$gia_don; ?>)" style="background: #fff7ed; color: #c2410c; border: 1px solid #fed7aa; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" title="Hủy yêu cầu và nhận lại tiền chuyển khoản">
+                                        Hủy &amp; Hoàn tiền
+                                    </button>
+                                <?php else: ?>
+                                    <button type="button" onclick="cancelUserBooking(<?php echo $row['dat_san_id']; ?>)" class="btn-cancel-action" style="background: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; padding: 6px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: all 0.2s;" title="Hủy yêu cầu đặt sân">
+                                        Hủy đơn
+                                    </button>
+                                <?php endif; ?>
                             <?php elseif ($row['trang_thai'] == 'Đã xác nhận'): ?>
                                 <?php if ($is_match_finished): ?>
                                     <?php if (!empty($row['danh_gia_id'])): ?>
@@ -140,9 +150,19 @@
                                     <?php endif; ?>
                                 <?php endif; ?>
                             <?php elseif ($row['trang_thai'] == 'Chờ hoàn tiền'): ?>
-                                <span style="color: #6d28d9; font-size: 0.85rem; font-weight: 600;">
-                                    Chờ xử lý
-                                </span>
+                                <?php 
+                                    $rf_info = json_decode($row['thong_tin_hoan_tien'] ?? '{}', true);
+                                    $needs_bank_info = (empty($rf_info['stk']) || $rf_info['stk'] === 'Chưa cung cấp');
+                                ?>
+                                <?php if ($needs_bank_info): ?>
+                                    <button type="button" onclick="openRefundModal(<?php echo $row['dat_san_id']; ?>, '<?php echo addslashes($row['ten_san']); ?>', <?php echo (int)$gia_don; ?>)" style="background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; padding: 5px 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer;" title="Bổ sung STK ngân hàng để nhận tiền hoàn">
+                                        <i class="fas fa-university"></i> Nhập STK hoàn
+                                    </button>
+                                <?php else: ?>
+                                    <span style="color: #6d28d9; font-size: 0.85rem; font-weight: 600;">
+                                        Chờ hoàn tiền
+                                    </span>
+                                <?php endif; ?>
                             <?php elseif ($row['trang_thai'] == 'Đã hoàn tiền'): ?>
                                 <span style="color: #1d4ed8; font-size: 0.85rem; font-weight: 600;">
                                     Đã hoàn tiền

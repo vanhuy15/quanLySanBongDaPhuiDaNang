@@ -115,9 +115,13 @@ $san_list = $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
                             <?php if ($san['total_reviews'] > 0): ?>
                                 <div style="display: flex; align-items: center; gap: 8px;">
                                     <strong style="font-size: 1.1rem; color: var(--text-heading);"><?php echo number_format($san['avg_rating'], 1); ?></strong>
-                                    <span style="color: #f59e0b; font-size: 0.9rem;">
+                                    <span style="font-size: 0.9rem;">
                                         <?php for ($s = 1; $s <= 5; $s++): ?>
-                                            <i class="<?php echo $s <= round($san['avg_rating']) ? 'fas' : 'far'; ?> fa-star"></i>
+                                            <?php if ($s <= round($san['avg_rating'])): ?>
+                                                <i class="fas fa-star" style="color: #f59e0b;"></i>
+                                            <?php else: ?>
+                                                <i class="far fa-star" style="color: #cbd5e1;"></i>
+                                            <?php endif; ?>
                                         <?php endfor; ?>
                                     </span>
                                 </div>

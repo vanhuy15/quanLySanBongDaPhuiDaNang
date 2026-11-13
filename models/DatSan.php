@@ -66,7 +66,38 @@ class DatSan {
             ];
         }
 
-        // 2. Bắt đầu giao tác (Transaction)
+        // 2. Kiểm tra tính hợp lệ của ngày đặt và khung giờ (Chống đặt khung giờ đã trôi qua)
+        $min_allowed = max('2025-01-01', date('Y-m-d'));
+        if (empty($ngay_dat) || $ngay_dat < $min_allowed) {
+            return [
+                'success' => false,
+                'message' => 'Lỗi: Ngày đặt sân không hợp lệ hoặc đã trôi qua trong quá khứ.'
+            ];
+        }
+
+        $kg_check = $conn->prepare("SELECT gio_bat_dau FROM khung_gio WHERE khung_gio_id = ?");
+        $kg_check->bind_param("i", $khung_gio_id);
+        $kg_check->execute();
+        $kg_info = $kg_check->get_result()->fetch_assoc();
+        $kg_check->close();
+
+        if (!$kg_info) {
+            return [
+                'success' => false,
+                'message' => 'Lỗi: Khung giờ không tồn tại!'
+            ];
+        }
+
+        $slot_start_time = strtotime($ngay_dat . ' ' . $kg_info['gio_bat_dau']);
+        $buffer_seconds = 5 * 60; // 5 phút khoảng đệm chuẩn bị sân
+        if ($slot_start_time <= (time() + $buffer_seconds)) {
+            return [
+                'success' => false,
+                'message' => 'Khung giờ này đã trôi qua hoặc quá sát giờ thi đấu (dưới 5 phút). Vui lòng chọn khung giờ khác!'
+            ];
+        }
+
+        // 3. Bắt đầu giao tác (Transaction)
         $conn->begin_transaction();
 
         try {

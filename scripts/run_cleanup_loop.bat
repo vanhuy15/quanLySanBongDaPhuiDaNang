@@ -11,3 +11,4 @@ node "%~dp0run-php.js" "%~dp0cron_cleanup_slots.php"
 echo [Timer] Dang cho 120 giay cho lan quet tiep theo...
 timeout /t 120 /nobreak >nul
 goto loop
+

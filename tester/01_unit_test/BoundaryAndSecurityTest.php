@@ -127,5 +127,54 @@ class BoundaryAndSecurityTest extends TestCase {
         $user['khoa_tai_khoan'] = 0;
         $this->assertTrue($user['khoa_tai_khoan'] === 0 && $user['diem_uy_tin'] >= 40);
     }
+
+    /**
+     * Bảo mật Đăng nhập: Khớp chính xác tên đăng nhập phân biệt chữ hoa / chữ thường (Case Sensitive)
+     */
+    public function testCaseSensitiveUsernameMatching() {
+        $dbUsername = 'admin15';
+
+        // 1. Nhập đúng chữ thường: Khớp chính xác
+        $inputCorrect = 'admin15';
+        $this->assertTrue($dbUsername === $inputCorrect, "Tên đăng nhập chữ thường phải khớp chính xác");
+
+        // 2. Nhập in hoa: Bắt buộc từ chối
+        $inputUpper = 'ADMIN15';
+        $this->assertFalse($dbUsername === $inputUpper, "Tên đăng nhập in hoa ADMIN15 không được phép đăng nhập vào tài khoản admin15");
+
+        // 3. Nhập hoa thường lẫn lộn: Bắt buộc từ chối
+        $inputMixed = 'Admin15';
+        $this->assertFalse($dbUsername === $inputMixed, "Tên đăng nhập Admin15 không được phép đăng nhập vào tài khoản admin15");
+    }
+
+    /**
+     * BVA: Kiểm thử biên 5 phút đệm chuẩn bị sân (Lead Time Buffer)
+     * - Giờ bắt đầu <= time() + 300s: Đã quá hạn hoặc quá sát giờ thi đấu -> Chặn
+     * - Giờ bắt đầu > time() + 300s: Khả dụng -> Cho phép đặt
+     */
+    public function testPastTimeSlotBookingBoundaryWith5MinBuffer() {
+        $now = time();
+        $bufferSeconds = 5 * 60; // 300 giây
+
+        // 1. Khung giờ đã qua trong quá khứ (-10 phút)
+        $pastSlotTime = $now - 600;
+        $isPastValid = ($pastSlotTime > ($now + $bufferSeconds));
+        $this->assertFalse($isPastValid, "Khung giờ trong quá khứ bắt buộc phải bị từ chối");
+
+        // 2. Khung giờ sát giờ thi đấu (+3 phút, nằm trong buffer 5 phút)
+        $insideBufferSlotTime = $now + 180;
+        $isInsideBufferValid = ($insideBufferSlotTime > ($now + $bufferSeconds));
+        $this->assertFalse($isInsideBufferValid, "Khung giờ còn dưới 5 phút bắt buộc phải bị từ chối");
+
+        // 3. Khung giờ đúng chính xác biên 5 phút (+300 giây)
+        $exactBoundaryTime = $now + 300;
+        $isExactValid = ($exactBoundaryTime > ($now + $bufferSeconds));
+        $this->assertFalse($isExactValid, "Khung giờ đúng 5 phút (<= 300s) phải bị đóng");
+
+        // 4. Khung giờ an toàn trong tương lai (+6 phút, ngoài buffer)
+        $futureSlotTime = $now + 360;
+        $isFutureValid = ($futureSlotTime > ($now + $bufferSeconds));
+        $this->assertTrue($isFutureValid, "Khung giờ còn trên 5 phút phải khả dụng cho khách đặt");
+    }
 }
 

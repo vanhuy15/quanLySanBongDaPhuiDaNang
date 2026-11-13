@@ -252,7 +252,11 @@ $result = $stmt->get_result();
                         <td>
                             <?php 
                             if ($row['trang_thai'] == 'Chờ xác nhận') {
-                                echo '<span class="badge badge-cho"><span class="badge-dot"></span> Chờ duyệt</span>';
+                                if ($is_match_past) {
+                                    echo '<span class="badge badge-huy" title="Đã qua giờ thi đấu mà chưa duyệt"><span class="badge-dot"></span> Quá hạn duyệt</span>';
+                                } else {
+                                    echo '<span class="badge badge-cho"><span class="badge-dot"></span> Chờ duyệt</span>';
+                                }
                             } elseif ($row['trang_thai'] == 'Đã xác nhận') {
                                 if ($is_match_past) {
                                     if ($row['phuong_thuc'] == 'tien_mat' && $row['tt_trang_thai'] != 'da_thanh_toan') {
@@ -277,12 +281,18 @@ $result = $stmt->get_result();
                         <td style="text-align: center;">
                             <div class="action-buttons-group" style="justify-content: center;">
                                 <?php if($row['trang_thai'] == 'Chờ xác nhận'): ?>
-                                    <a href="capnhat.php?id=<?php echo $row['dat_san_id']; ?>&action=xacnhan&status_return=<?php echo $status_filter; ?>" class="btn-action-icon btn-accept" title="Duyệt đơn này">
-                                        <i class="fas fa-check"></i>
-                                    </a>
-                                    <a href="capnhat.php?id=<?php echo $row['dat_san_id']; ?>&action=huy&status_return=<?php echo $status_filter; ?>" class="btn-action-icon btn-cancel" title="Hủy đơn" onclick="return confirm('Hủy đơn đặt sân này?');">
-                                        <i class="fas fa-times"></i>
-                                    </a>
+                                    <?php if ($is_match_past): ?>
+                                        <a href="capnhat.php?id=<?php echo $row['dat_san_id']; ?>&action=huy&status_return=<?php echo $status_filter; ?>" class="btn-action-icon btn-cancel" title="Hủy đơn quá hạn duyệt" onclick="return confirm('Hủy đơn đã quá giờ thi đấu này?');">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="capnhat.php?id=<?php echo $row['dat_san_id']; ?>&action=xacnhan&status_return=<?php echo $status_filter; ?>" class="btn-action-icon btn-accept" title="Duyệt đơn này">
+                                            <i class="fas fa-check"></i>
+                                        </a>
+                                        <a href="capnhat.php?id=<?php echo $row['dat_san_id']; ?>&action=huy&status_return=<?php echo $status_filter; ?>" class="btn-action-icon btn-cancel" title="Hủy đơn" onclick="return confirm('Hủy đơn đặt sân này?');">
+                                            <i class="fas fa-times"></i>
+                                        </a>
+                                    <?php endif; ?>
                                 
                                 <?php elseif($row['trang_thai'] == 'Đã xác nhận'): ?>
                                     <?php if ($row['phuong_thuc'] == 'tien_mat'): ?>
@@ -321,10 +331,17 @@ $result = $stmt->get_result();
                                         $rf_stk = $rf_info['stk'] ?? '';
                                         $rf_name = $rf_info['ten_chu_tk'] ?? $row['ho_ten'];
                                         $rf_amt = (int)$gia_hien_thi;
+                                        $has_bank_info = (!empty($rf_stk) && $rf_stk !== 'Chưa cung cấp');
                                     ?>
-                                    <button type="button" class="btn-action-icon btn-refund" onclick="openAdminRefundQR(<?php echo $row['dat_san_id']; ?>, '<?php echo addslashes($rf_bank); ?>', '<?php echo addslashes($rf_stk); ?>', '<?php echo addslashes($rf_name); ?>', <?php echo $rf_amt; ?>, '<?php echo $status_filter; ?>')" title="Quét mã VietQR hoàn tiền cho khách">
-                                        <i class="fas fa-qrcode"></i>
-                                    </button>
+                                    <?php if ($has_bank_info): ?>
+                                        <button type="button" class="btn-action-icon btn-refund" onclick="openAdminRefundQR(<?php echo $row['dat_san_id']; ?>, '<?php echo addslashes($rf_bank); ?>', '<?php echo addslashes($rf_stk); ?>', '<?php echo addslashes($rf_name); ?>', <?php echo $rf_amt; ?>, '<?php echo $status_filter; ?>')" title="Quét mã VietQR hoàn tiền cho khách">
+                                            <i class="fas fa-qrcode"></i>
+                                        </button>
+                                    <?php else: ?>
+                                        <a href="tel:<?php echo htmlspecialchars($row['sdt']); ?>" class="btn-action-icon btn-refund" style="background: #fef2f2; color: #dc2626; border-color: #fecaca;" title="Quá hạn duyệt: Bấm gọi khách lấy STK hoàn tiền (SĐT: <?php echo htmlspecialchars($row['sdt']); ?>)">
+                                            <i class="fas fa-phone-alt"></i>
+                                        </a>
+                                    <?php endif; ?>
 
                                 <?php elseif($row['trang_thai'] == 'Đã hoàn tiền'): ?>
                                     <span style="color:#0284c7; font-size:12px; font-weight:700;">Đã hoàn</span>

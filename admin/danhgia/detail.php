@@ -113,7 +113,11 @@ include '../header_admin.php';
         <div class="big-num"><?php echo number_format($san['avg_rating'], 1); ?></div>
         <div class="big-stars">
             <?php for ($s = 1; $s <= 5; $s++): ?>
-                <i class="<?php echo $s <= round($san['avg_rating']) ? 'fas' : 'far'; ?> fa-star"></i>
+                <?php if ($s <= round($san['avg_rating'])): ?>
+                    <i class="fas fa-star" style="color: #f59e0b;"></i>
+                <?php else: ?>
+                    <i class="far fa-star" style="color: #cbd5e1;"></i>
+                <?php endif; ?>
             <?php endfor; ?>
         </div>
         <div class="big-lbl"><?php echo number_format($san['total_reviews']); ?> lượt đánh giá</div>
@@ -177,13 +181,14 @@ include '../header_admin.php';
                             </div>
                         </td>
                         <td>
-                            <div style="color: #f59e0b; font-size: 0.85rem; display: flex; align-items: center; gap: 3px;">
+                            <div style="font-size: 0.95rem; display: flex; align-items: center; gap: 3px;" title="<?php echo $rv['so_sao']; ?>/5 sao">
                                 <?php for ($s = 1; $s <= 5; $s++): ?>
-                                    <i class="<?php echo $s <= $rv['so_sao'] ? 'fas' : 'far'; ?> fa-star"></i>
+                                    <?php if ($s <= $rv['so_sao']): ?>
+                                        <i class="fas fa-star" style="color: #f59e0b;"></i>
+                                    <?php else: ?>
+                                        <i class="far fa-star" style="color: #cbd5e1;"></i>
+                                    <?php endif; ?>
                                 <?php endfor; ?>
-                                <span style="font-weight: 700; color: var(--text-heading); margin-left: 4px;">
-                                    <?php echo $rv['so_sao']; ?>⭐
-                                </span>
                             </div>
                         </td>
                         <td>

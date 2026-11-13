@@ -32,12 +32,12 @@
             
             <div style="display: flex; align-items: center; gap: 8px;">
                 <label style="font-size: 0.9rem; color: #475569; font-weight: 600;">Từ:</label>
-                <input type="date" name="tu_ngay" id="tu_ngay" value="<?php echo htmlspecialchars($tu_ngay); ?>" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; color: #334155;">
+                <input type="date" name="tu_ngay" id="tu_ngay" value="<?php echo htmlspecialchars($tu_ngay); ?>" min="2025-01-01" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; color: #334155;">
             </div>
             
             <div style="display: flex; align-items: center; gap: 8px;">
                 <label style="font-size: 0.9rem; color: #475569; font-weight: 600;">Đến:</label>
-                <input type="date" name="den_ngay" id="den_ngay" value="<?php echo htmlspecialchars($den_ngay); ?>" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; color: #334155;">
+                <input type="date" name="den_ngay" id="den_ngay" value="<?php echo htmlspecialchars($den_ngay); ?>" min="2025-01-01" style="padding: 0.5rem; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.9rem; outline: none; color: #334155;">
             </div>
             
             <button type="submit" style="background: var(--primary-color); color: white; border: none; padding: 0.5rem 1.2rem; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 600; transition: background 0.2s;">Lọc</button>

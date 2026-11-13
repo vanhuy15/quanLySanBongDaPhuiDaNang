@@ -25,7 +25,7 @@
             <div class="form-group" style="flex: 1;">
                 <label for="ngay_dat" style="font-weight: 500; font-size: 0.9rem; margin-bottom: 8px;">Chọn ngày xem lịch:</label>
                 <div class="input-wrapper">
-                    <input type="date" name="ngay_dat" id="ngay_dat" value="<?php echo $ngay_dat_xem; ?>" min="<?php echo date('Y-m-d'); ?>" style="width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; background: #ffffff;">
+                    <input type="date" name="ngay_dat" id="ngay_dat" value="<?php echo $ngay_dat_xem; ?>" min="<?php echo max('2025-01-01', date('Y-m-d')); ?>" style="width: 100%; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid #cbd5e1; outline: none; background: #ffffff;">
                 </div>
             </div>
         </form>

@@ -8,10 +8,13 @@ require_admin();
 // --- 1. BỘ LỌC NGÀY VÀ TRẠNG THÁI ---
 $status_filter = isset($_GET['status']) ? $_GET['status'] : 'tat_ca';
 $date_filter = isset($_GET['date_filter']) ? trim($_GET['date_filter']) : '';
+$min_date = '2025-01-01';
 
-// --- 1. BỘ LỌC NGÀY VÀ TRẠNG THÁI ---
-$status_filter = isset($_GET['status']) ? $_GET['status'] : 'tat_ca';
-$date_filter = isset($_GET['date_filter']) ? trim($_GET['date_filter']) : '';
+if (!empty($date_filter) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $date_filter)) {
+    if ($date_filter < $min_date) {
+        $date_filter = $min_date;
+    }
+}
 
 $where_clauses = ["ds.deleted_at IS NULL", "ds.trang_thai != 'Chờ thanh toán'"];
 $count_clauses = ["deleted_at IS NULL", "trang_thai != 'Chờ thanh toán'"];
@@ -114,7 +117,7 @@ $result = $stmt->get_result();
         <form method="GET" action="index.php" style="display: flex; gap: 8px; align-items: center;">
             <input type="hidden" name="status" value="<?php echo htmlspecialchars($status_filter); ?>">
             <div style="position: relative;">
-                <input type="date" name="date_filter" value="<?php echo htmlspecialchars($date_filter); ?>" 
+                <input type="date" name="date_filter" value="<?php echo htmlspecialchars($date_filter); ?>" min="<?php echo $min_date; ?>" 
                        style="padding: 8px 14px; background: #ffffff; border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 0.88rem; outline: none; font-weight: 500; color: var(--text-heading);">
             </div>
             <button type="submit" class="btn-primary-modern" style="padding: 8px 14px; font-size: 0.85rem;">

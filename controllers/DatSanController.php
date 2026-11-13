@@ -23,6 +23,9 @@ class DatSanController extends Controller {
             $san_id_xem = $san_bongs[0]['san_id'];
         }
         $ngay_dat_xem = isset($_GET['ngay_dat']) ? $_GET['ngay_dat'] : date('Y-m-d');
+        if ($ngay_dat_xem < '2025-01-01') {
+            $ngay_dat_xem = '2025-01-01';
+        }
 
         $this->render('datsan/book', [
             'san_bongs' => $san_bongs,
@@ -35,6 +38,9 @@ class DatSanController extends Controller {
         // AJAX endpoint returning HTML
         $san_id = intval($_GET['san_id'] ?? 0);
         $ngay_dat = $_GET['ngay_dat'] ?? date('Y-m-d');
+        if ($ngay_dat < '2025-01-01') {
+            $ngay_dat = '2025-01-01';
+        }
         $view_mode = $_GET['mode'] ?? 'san_5'; // 'san_5' or 'san_7'
         
         $conn = Database::getConnection();
@@ -123,6 +129,12 @@ class DatSanController extends Controller {
 
         if (empty($ten_san_con)) {
             $this->jsonResponse(['success' => false, 'message' => 'Lỗi: Bạn chưa chọn sân con. Vui lòng click vào một sân trống trên sơ đồ trước khi bấm Đặt Ngay!']);
+            return;
+        }
+
+        if (empty($ngay_dat) || $ngay_dat < '2025-01-01') {
+            $this->jsonResponse(['success' => false, 'message' => 'Lỗi: Ngày đặt sân không hợp lệ (hệ thống chỉ áp dụng từ năm 2025 trở đi).']);
+            return;
         }
 
         $result = DatSan::bookWithLock($nguoi_dung_id, $khung_gio_id, $ngay_dat, $loai_san_dat, $ten_san_con, $san_con_khoa);

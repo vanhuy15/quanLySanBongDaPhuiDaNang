@@ -6,6 +6,10 @@ require_once __DIR__ . '/../../includes/db.php';
 require_admin();
 
 $filter_date = isset($_GET['date']) ? clean_input($_GET['date']) : '';
+$min_date = '2025-01-01';
+if (!empty($filter_date) && $filter_date < $min_date) {
+    $filter_date = $min_date;
+}
 $pay_method = isset($_GET['method']) ? clean_input($_GET['method']) : 'all';
 
 // Xây dựng điều kiện truy vấn

@@ -211,6 +211,14 @@ class UserController extends Controller {
         $den_ngay = $_GET['den_ngay'] ?? '';
         $trang_thai = $_GET['trang_thai'] ?? '';
         
+        $min_date = '2025-01-01';
+        if (!empty($tu_ngay) && $tu_ngay < $min_date) {
+            $tu_ngay = $min_date;
+        }
+        if (!empty($den_ngay) && $den_ngay < $min_date) {
+            $den_ngay = $min_date;
+        }
+        
         // Pagination
         $limit = 10;
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
